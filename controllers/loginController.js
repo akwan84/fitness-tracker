@@ -30,8 +30,8 @@ const loginUser = async(req, res) => {
 
         const refreshToken = jwt.sign(
             { "username": foundUser.username},
-            process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: '30s'}
+            process.env.REFRESH_TOKEN_SECRET,
+            { expiresIn: '1d'}
         )
 
         //store the refresh token with a user
