@@ -11,5 +11,6 @@ app.use(express.json());
 
 app.use('/register', require('./routes/register'));
 app.use('/login', require('./routes/login'));
+app.use('/workout', require('./routes/workout'));
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

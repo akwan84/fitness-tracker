@@ -15,7 +15,7 @@ const handleNewUser = async(req, res) => {
     if(!user || !pwd) return res.status(400).json({"message": "Username and password required"});
 
     //check for a duplicated username
-    const duplicatedUser = usersDB.users.find(person => person.username === username);
+    const duplicatedUser = usersDB.users.find(person => person.username === user);
     if(duplicatedUser) res.sendStatus(409); //409 indicates a duplicate resource
 
     try {
@@ -31,6 +31,13 @@ const handleNewUser = async(req, res) => {
             path.join(__dirname, '..', 'model', 'users.json'),
             JSON.stringify(usersDB.users)
         );
+
+        const workoutData = require('../model/workouts.json');
+        workoutData[user] = [];
+        await fsPromises.writeFile(
+            path.join(__dirname, '..', 'model', 'workouts.json'),
+            JSON.stringify(workoutData)
+        )
         res.status(201).json({ "message": `User ${user} has been created successfully`})
     } catch (err) {
         res.status(500).json({ "message": err.message })
