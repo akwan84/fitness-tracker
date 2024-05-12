@@ -24,13 +24,13 @@ function App() {
     } catch(err) {
       console.log(err.stack);
     }
-  };
+  };*/
 
   const handleLogin = async () => {
     const user = username;
     const pwd = password;
     try {
-      const response = await fetch('http://localhost:3500/auth', {
+      const response = await fetch('http://localhost:3500/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include', 
@@ -38,13 +38,13 @@ function App() {
       });
       const data = await response.json();
       console.log(data);
-      setToken(data["accessToken"]);
+      //setToken(data["accessToken"]);
     } catch(err) {
       console.log(err.stack);
     }
   };
 
-  const makeRequest = async () => {
+  /*const makeRequest = async () => {
     try {
       const response = await fetch('http://localhost:3500/employees', {
         method: 'GET',
@@ -81,7 +81,7 @@ function App() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <br />
-          <button>Login</button>
+          <button onClick={handleLogin}>Login</button>
           <button>Refresh</button>
         </div>
       )}
