@@ -8,8 +8,10 @@ const path = require('path');
 const { v4: uuid } = require('uuid');
 
 const addWorkout = async(req, res) => {
-    const {user, name, date, exercises} = req.body;
-    if(!user || !name || !date || !exercises) return res.status(400).json({ "message": "Name, date, and exercises are required" });
+    const user = req.user; //set by the verifyJwt middleware, should be here if no issues in middleware
+
+    const {name, date, exercises} = req.body;
+    if(!name || !date || !exercises) return res.status(400).json({ "message": "Name, date, and exercises are required" });
     /*
         Check format of exercise data. Should look like:
         [

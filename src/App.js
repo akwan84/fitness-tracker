@@ -7,12 +7,12 @@ function App() {
   const [token, setToken] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  /*const handleRefresh = async () => {
-    if (username === 'admin' && password === 'admin') {
+  const handleRefresh = async () => {
+    /*if (username === 'admin' && password === 'admin') {
       setIsLoggedIn(true);
     } else {
       alert('Invalid username or password');
-    }
+    }*/
     try {
       const response = await fetch('http://localhost:3500/refresh', {
         method: 'GET',
@@ -24,7 +24,7 @@ function App() {
     } catch(err) {
       console.log(err.stack);
     }
-  };*/
+  };
 
   const handleLogin = async () => {
     const user = username;
@@ -82,7 +82,7 @@ function App() {
           />
           <br />
           <button onClick={handleLogin}>Login</button>
-          <button>Refresh</button>
+          <button onClick={handleRefresh}>Refresh</button>
         </div>
       )}
     </div>
