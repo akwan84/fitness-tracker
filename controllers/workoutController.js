@@ -49,23 +49,33 @@ const addWorkout = async(req, res) => {
         if(!correctFormat) return res.status(400).json({ "message": "Weight, reps, and notes are required" });
     }
 
-    const userWorkoutData = workoutsDB.workouts[user];
-    userWorkoutData.push(
+    const userWorkoutData = workoutsDB.workouts;
+    /*userWorkoutData[user].push(
         {
             "id": uuid(),
             "name": name,
             "date": date,
             "exercises": exercises
         }
-    );
+    );*/
+    userWorkoutData[user] = [
+        ...userWorkoutData[user], 
+        {
+            "id": uuid(),
+            "name": name,
+            "date": date,
+            "exercises": exercises
+        }
+    ];
+    workoutsDB.setWorkouts(userWorkoutData);
 
-    const workoutsCopy = workoutsDB.workouts;
-    workoutsCopy[user] = userWorkoutData;
-    workoutsDB.setWorkouts(workoutsCopy);
+    //const workoutsCopy = workoutsDB.workouts;
+    //workoutsCopy[user] = userWorkoutData;
+    //workoutsDB.setWorkouts(workoutsCopy);
 
     await fsPromises.writeFile(
         path.join(__dirname, '..', 'model', 'workouts.json'),
-        JSON.stringify(workoutsCopy)
+        JSON.stringify(userWorkoutData)
     );
     res.status(201).json({ "message": `Workout added successfully`})
 }
