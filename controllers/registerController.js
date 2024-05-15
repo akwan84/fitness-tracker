@@ -32,12 +32,22 @@ const handleNewUser = async(req, res) => {
             JSON.stringify(usersDB.users)
         );
 
+        //add the new user to the workout database
         const workoutData = require('../model/workouts.json');
         workoutData[user] = [];
         await fsPromises.writeFile(
             path.join(__dirname, '..', 'model', 'workouts.json'),
             JSON.stringify(workoutData)
-        )
+        );
+
+        //add the new user to the exercises database
+        const exerciseData = require('../model/exercises.json');
+        exerciseData[user] = [];
+        await fsPromises.writeFile(
+            path.join(__dirname, '..', 'model', 'exercises.json'),
+            JSON.stringify(exerciseData)
+        );
+
         res.status(201).json({ "message": `User ${user} has been created successfully`})
     } catch (err) {
         res.status(500).json({ "message": err.message })

@@ -29,5 +29,6 @@ app.use('/logout', require('./routes/logout'));
 
 app.use(verifyJwt);
 app.use('/workout', require('./routes/workout'));
+app.use('/exercise', require('./routes/exercise'));
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
