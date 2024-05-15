@@ -50,14 +50,6 @@ const addWorkout = async(req, res) => {
     }
 
     const userWorkoutData = workoutsDB.workouts;
-    /*userWorkoutData[user].push(
-        {
-            "id": uuid(),
-            "name": name,
-            "date": date,
-            "exercises": exercises
-        }
-    );*/
     userWorkoutData[user] = [
         ...userWorkoutData[user], 
         {
@@ -68,10 +60,6 @@ const addWorkout = async(req, res) => {
         }
     ];
     workoutsDB.setWorkouts(userWorkoutData);
-
-    //const workoutsCopy = workoutsDB.workouts;
-    //workoutsCopy[user] = userWorkoutData;
-    //workoutsDB.setWorkouts(workoutsCopy);
 
     await fsPromises.writeFile(
         path.join(__dirname, '..', 'model', 'workouts.json'),
