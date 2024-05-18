@@ -17,9 +17,10 @@ const verifyJwt = (req, res, next) => {
         (err, decoded) => {
             if(err) return res.sendStatus(403);
             
-            //set req.user so that JWT protected endpoints will know which user
-            //is performing the action
-            req.user = decoded.username;
+            //set req.user and req.roles so that JWT protected endpoints will know which user
+            //is performing the action and what roles they have
+            req.user = decoded.UserInfo.username;
+            req.roles = decoded.UserInfo.roles;
             next();
         }
     )
