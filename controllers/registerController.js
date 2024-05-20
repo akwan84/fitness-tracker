@@ -22,9 +22,8 @@ const handleNewUser = async(req, res) => {
             "password": encryptedPwd,
         });
 
-        /*
         //add the new user to the workout database
-        const workoutData = require('../model/workouts.json');
+        /*const workoutData = require('../model/workouts.json');
         workoutData[user] = [];
         await fsPromises.writeFile(
             path.join(__dirname, '..', 'model', 'workouts.json'),

@@ -1,13 +1,7 @@
-const usersDB = {
-    users: require('../model/users.json'),
-    setUsers: function(data) { this.users = data }
-}
-
+const User = require('../model/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const fsPromises = require('fs').promises;
-const path = require('path');
 
 const loginUser = async(req, res) => {
     //Make sure username and password are provided
@@ -15,7 +9,7 @@ const loginUser = async(req, res) => {
     if(!user || !pwd) return res.status(400).json({ "message": "Username and password are required" });
 
     //Find the user
-    const foundUser = usersDB.users.find(person => person.username === user);
+    const foundUser = await User.findOne({ username: user }).exec()
     if(!foundUser) return res.status(404).json({ "message": `User ${user} does not exist` });
 
     //Make sure passwords match
@@ -41,15 +35,8 @@ const loginUser = async(req, res) => {
         )
 
         //store the refresh token with a user
-        const otherUsers = usersDB.users.filter(person => person.username !== foundUser.username);
-        const currentUser = { ...foundUser, refreshToken };
-        usersDB.setUsers([...otherUsers, currentUser]);
-
-        //write to file
-        await fsPromises.writeFile(
-            path.join(__dirname, '..', 'model', 'users.json'),
-            JSON.stringify(usersDB.users)
-        );
+        foundUser.refreshToken = refreshToken;
+        await foundUser.save();
 
         //store the refresh token in a cookie which will be passed to every http request
         //important when we need to refresh the access token

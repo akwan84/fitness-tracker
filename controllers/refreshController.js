@@ -1,19 +1,15 @@
-const usersDB = {
-    users: require('../model/users.json'),
-    setUsers: function(data) { this.users = data }
-}
-
+const User = require('../model/User');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const handleRefresh = (req, res) => {
+const handleRefresh = async (req, res) => {
     //check whether the jwt cookie exists (i.e. where the refresh token is stored)
     const cookies = req.cookies;
     if(!cookies?.jwt) return res.sendStatus(401);
     const refreshToken = cookies.jwt;
 
     //look for the user with the same refresh token
-    const foundUser = usersDB.users.find(person => person.refreshToken === refreshToken);
+    const foundUser = await User.findOne({ refreshToken }).exec();
     if(!foundUser) return res.sendStatus(403); //forbidden
 
     jwt.verify(
@@ -41,4 +37,4 @@ const handleRefresh = (req, res) => {
     )
 }
 
-module.exports = { handleRefresh }  ;
+module.exports = { handleRefresh };
