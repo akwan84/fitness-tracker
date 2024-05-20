@@ -1,11 +1,5 @@
-const usersDB = {
-    users: require('../model/users.json'),
-    setUsers: function(data) { this.users = data }
-}
-
+const User = require('../model/User');
 const bcrypt = require('bcrypt');
-const fsPromises = require('fs').promises;
-const path = require('path');
 
 const handleNewUser = async(req, res) => {
     //get the username and password
@@ -15,29 +9,20 @@ const handleNewUser = async(req, res) => {
     if(!user || !pwd) return res.status(400).json({"message": "Username and password required"});
 
     //check for a duplicated username
-    const duplicatedUser = usersDB.users.find(person => person.username === user);
-    if(duplicatedUser) res.sendStatus(409); //409 indicates a duplicate resource
+    const duplicatedUser = await User.findOne({ username: user }).exec();
+    if(duplicatedUser) return res.sendStatus(409); //409 indicates a duplicate resource
 
     try {
         //encrypt the password (number means salting rounds (idk what that means))
         const encryptedPwd = await bcrypt.hash(pwd, 10);
 
-        //create the new user
-        const newUser = { 
+        //create and store the new user
+        const newUser = await User.create({ 
             "username": user, 
             "password": encryptedPwd,
-            "roles": {
-                "User": 2001
-            } 
-        };
+        });
 
-        //add the new user to the database
-        usersDB.setUsers([...usersDB.users, newUser]);
-        await fsPromises.writeFile(
-            path.join(__dirname, '..', 'model', 'users.json'),
-            JSON.stringify(usersDB.users)
-        );
-
+        /*
         //add the new user to the workout database
         const workoutData = require('../model/workouts.json');
         workoutData[user] = [];
@@ -52,7 +37,7 @@ const handleNewUser = async(req, res) => {
         await fsPromises.writeFile(
             path.join(__dirname, '..', 'model', 'exercises.json'),
             JSON.stringify(exerciseData)
-        );
+        );*/
 
         res.status(201).json({ "message": `User ${user} has been created successfully`})
     } catch (err) {

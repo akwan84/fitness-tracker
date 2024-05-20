@@ -25,4 +25,6 @@ yarn-error.log*
 
 # backend
 /logs
-/model
+/model/exercises.json
+/model/users.json
+/model/workouts.json
