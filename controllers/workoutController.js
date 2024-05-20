@@ -16,19 +16,24 @@ const addWorkout = async(req, res) => {
         Check format of exercise data. Should look like:
         [
             {
+                user: string
                 name: string,
-                date: string,
-                exercises: {
-                    exercise: [
-                        {
-                            "weight": float
-                            "reps": int
-                            "notes": string
-                        },
-                        ...
-                    ],
+                date: date,
+                exercises: [
+                    {
+                        "exercise": string,
+                        "sets": integer
+                        "setInfo": [
+                            {
+                                "weight": number,
+                                "reps": number,
+                                "notes": string
+                            },
+                            ...
+                        ]
+                    }
                     ...
-                }
+                ]
             }
             ...
         ]
