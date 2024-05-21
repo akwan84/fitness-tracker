@@ -68,4 +68,16 @@ const addWorkout = async(req, res) => {
     }
 }
 
-module.exports = { addWorkout };
+const getWorkouts = async(req, res) => {
+    const user = req.user;
+
+    try {
+        const result = await Workout.find({ "user" : user});
+
+        res.status(200).json(result);
+    } catch (err) {
+        res.status(500).json({ "message": err.message });
+    }
+}
+
+module.exports = { addWorkout, getWorkouts };
