@@ -11,7 +11,7 @@ const setSchema = new Schema({
         required: true
     },
     notes: String
-});
+}, { _id: false });
 
 const exerciseSchema = new Schema({
     exercise: {
@@ -23,7 +23,7 @@ const exerciseSchema = new Schema({
         required: true
     },
     setInfo: [setSchema]
-});
+}, { _id: false });
 
 const workoutSchema = new Schema({
     user: {
@@ -38,7 +38,10 @@ const workoutSchema = new Schema({
         type: Date,
         required: true
     },
-    exercises: [exerciseSchema]
+    exercises: {
+        type: [exerciseSchema],
+        required: true
+    }
 });
 
 module.exports = mongoose.model('Workout', workoutSchema);
