@@ -72,7 +72,7 @@ const getWorkouts = async(req, res) => {
     const user = req.user;
 
     try {
-        const result = await Workout.find({ "user" : user});
+        const result = await Workout.find({ "user" : user}).sort({ date: 1 });
 
         res.status(200).json(result);
     } catch (err) {

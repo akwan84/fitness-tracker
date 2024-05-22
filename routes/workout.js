@@ -6,5 +6,9 @@ const ROLES_LIST = require('../config/userRoles');
 
 router.post('/add-workout', verifyRoles(ROLES_LIST.User), controller.addWorkout);
 router.get('/get-workouts', verifyRoles(ROLES_LIST.User), controller.getWorkouts);
+//get workout by id
+//update workout
+//delete workout by id
+//get exercise history
 
 module.exports = router;
