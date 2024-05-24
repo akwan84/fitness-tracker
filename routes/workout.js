@@ -9,6 +9,6 @@ router.get('/get-workouts', verifyRoles(ROLES_LIST.User), controller.getWorkouts
 //get workout by id
 //update workout
 //delete workout by id
-//get exercise history
+router.get('/get-history', controller.getHistory);
 
 module.exports = router;

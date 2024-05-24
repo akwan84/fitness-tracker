@@ -72,6 +72,7 @@ const getWorkouts = async(req, res) => {
     const user = req.user;
 
     try {
+        //Get all the workouts of the user and sort in ascending order by date
         const result = await Workout.find({ "user" : user}).sort({ date: 1 });
 
         res.status(200).json(result);
@@ -80,4 +81,39 @@ const getWorkouts = async(req, res) => {
     }
 }
 
-module.exports = { addWorkout, getWorkouts };
+const getHistory = async(req, res) => {
+    const user = req.user;
+
+    try {
+        //Get the exercise to search for
+        const { exercise } = req.body;
+        if(!exercise) return res.status(400).json({ "message" : "exercise is required" });
+
+        //Get all the workouts of the user and sort in ascending order by date
+        const result = await Workout.find({ "user" : user }).sort({ date : 1 });
+
+        const response = [];
+
+        //iterate through all each workout 
+        result.forEach((workout) => {
+            //get just the desired exercise out of the exercise list
+            const exercises = workout.exercises;
+            const filteredExercise = exercises.filter((exerciseRecord) => exerciseRecord.exercise === exercise);
+
+            //pull out just the sets and set info
+            filteredExercise.forEach((exerciseInfo) => {
+                const resObj = {
+                    "date" : workout.date,
+                    "sets" : exerciseInfo.sets,
+                    "setInfo" : exerciseInfo.setInfo
+                };
+                response.push(resObj);
+            });
+        });
+        res.status(200).json(response);
+    } catch (err) {
+        res.status(500).json({ "message": err.message });
+    }
+}
+
+module.exports = { addWorkout, getWorkouts, getHistory };
