@@ -9,6 +9,9 @@ const cookieParser = require('cookie-parser');
 const verifyJwt = require('./middleware/verifyJwt');
 const mongoose = require('mongoose');
 const connectDB = require('./config/dbConn');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJSDoc = require('swagger-jsdoc');
+const { swaggerDefinition, options, swaggerSpec } = require('./swagger');
 
 const PORT = process.env.PORT || 3500;
 
@@ -32,6 +35,7 @@ app.use('/register', require('./routes/register'));
 app.use('/login', require('./routes/login'));
 app.use('/refresh', require('./routes/refresh'));
 app.use('/logout', require('./routes/logout'));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(verifyJwt);
 app.use('/workout', require('./routes/workout'));

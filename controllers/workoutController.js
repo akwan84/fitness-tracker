@@ -1,30 +1,65 @@
 const mongoose = require('mongoose');
 const Workout = require('../model/Workout');
 
-/*
-    Format of the data should look like:
-    {
-        user: string
-        name: string,
-        date: date,
-        exercises: [
-            {
-                "exercise": string,
-                "sets": integer
-                "setInfo": [
-                    {
-                        "weight": number,
-                        "reps": number,
-                        "notes": string
-                    },
-                    ...
-                ]
-            }
-            ...
-        ]
-    }
-*/
-
+/**
+ * @openapi
+ * /workout/add-workout:
+ *   post:
+ *     tags:
+ *       - Workout Controller
+ *     summary: Create a new workout
+ *     security: 
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "Push Day"
+ *               date:
+ *                 type: string
+ *                 example: "2024/05/20"
+ *               exercises:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     exercise:
+ *                       type: string
+ *                       example: "Bench Press"
+ *                     sets:
+ *                       type: number
+ *                       example: 1
+ *                     setInfo:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           weight:
+ *                             type: number
+ *                             example: 135
+ *                           reps:
+ *                             type: number
+ *                             example: 5
+ *                           notes:
+ *                             type: string
+ *                             example: "Felt relatively light"
+ *     responses:
+ *       201:
+ *         description: Workout created successfully
+ *       400:
+ *         description: Invalid request body
+ *       403:
+ *         description: Forbidden
+ *       422:
+ *         description: Invalid request body
+ *       500:
+ *         description: Internal server error
+ */
 const addWorkout = async(req, res) => {
     const user = req.user; //set by the verifyJwt middleware, should be here if no issues in middleware
 
@@ -68,6 +103,57 @@ const addWorkout = async(req, res) => {
     }
 }
 
+/**
+ * @openapi
+ * /workout/get-workout:
+ *   get:
+ *     tags:
+ *       - Workout Controller
+ *     summary: Get all workouts of a user
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content: 
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 name:
+ *                   type: string
+ *                   example: "Push Day"
+ *                 date:
+ *                   type: string
+ *                   example: "2024/05/20"
+ *                 exercises:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       exercise:
+ *                         type: string
+ *                         example: "Bench Press"
+ *                       sets:
+ *                         type: number
+ *                         example: 1
+ *                       setInfo:
+ *                         type: array
+ *                         items:
+ *                           type: object
+ *                           properties:
+ *                             weight:
+ *                               type: number
+ *                               example: 135
+ *                             reps:
+ *                               type: number
+ *                               example: 5
+ *                             notes:
+ *                               type: string
+ *                               example: "Felt relatively light"
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ */
 const getWorkouts = async(req, res) => {
     const user = req.user;
 
@@ -81,6 +167,58 @@ const getWorkouts = async(req, res) => {
     }
 }
 
+/**
+ * @openapi
+ * /workout/get-history:
+ *   get:
+ *     tags:
+ *       - Workout Controller
+ *     summary: Get the history of an exercise
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               exercise:
+ *                 type: string
+ *                 example: "Bench Press"
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   date:
+ *                     type: string
+ *                     example: "2020-04-20T04:00:00.000Z"
+ *                   sets:
+ *                     type: number
+ *                     example: 1
+ *                   setInfo:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         weight:
+ *                           type: number
+ *                           example: 135
+ *                         reps:
+ *                           type: number
+ *                           example: 10
+ *                         notes:
+ *                           type: string
+ *                           example: "Very hard set"
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ */
 const getHistory = async(req, res) => {
     const user = req.user;
 
