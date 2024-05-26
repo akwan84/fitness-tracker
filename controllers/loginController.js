@@ -2,7 +2,45 @@ const User = require('../model/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-
+            
+/**
+ * @openapi
+ * /login:
+ *   post:
+ *     tags:
+ *       - User
+ *     summary: Log in an existing user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user:
+ *                 type: string
+ *                 example: jdoe
+ *               pwd:
+ *                 type: string
+ *                 example: abc123
+ *     responses:
+ *       200:
+ *         description: Successful login
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR4cCI6IkpXVCJ9.eyJVc2VySW5mbyI6eyJ1c2VybmFtZSI6ImFrdRFuODQiLCJyb2xlcyI6WzIwMDEsbnVsbCxudWxsXO0sImlhdCI6MTcxNjUxOTQwNSwiZXhwIjoxNzE2NTIxMjA1fQ.yzAu0wJYNshVhcaVhVH9qoZClrtVUrMUVBEr4i-ftSQ"
+ *       400:
+ *         description: Bad request body
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: User not found
+ */
 const loginUser = async(req, res) => {
     //Make sure username and password are provided
     const { user, pwd } = req.body;
