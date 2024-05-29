@@ -4,11 +4,13 @@ const controller = require('../controllers/workoutController');
 const verifyRoles = require('../middleware/verifyRoles');
 const ROLES_LIST = require('../config/userRoles');
 
-router.post('/add-workout', verifyRoles(ROLES_LIST.User), controller.addWorkout);
-router.get('/get-workouts', verifyRoles(ROLES_LIST.User), controller.getWorkouts);
-//get workout by id
+router.post('/', verifyRoles(ROLES_LIST.User), controller.addWorkout);
+router.get('/', verifyRoles(ROLES_LIST.User), controller.getWorkouts);
+router.get('/:id', verifyRoles(ROLES_LIST.User), controller.getWorkoutById);
 //update workout
 //delete workout by id
-router.get('/get-history', controller.getHistory);
+
+//should move to the exercise controller later
+router.get('/history', controller.getHistory);
 
 module.exports = router;

@@ -3,7 +3,7 @@ const Workout = require('../model/Workout');
 
 /**
  * @openapi
- * /workout/add-workout:
+ * /workout:
  *   post:
  *     tags:
  *       - Workout Controller
@@ -105,7 +105,7 @@ const addWorkout = async(req, res) => {
 
 /**
  * @openapi
- * /workout/get-workout:
+ * /workout:
  *   get:
  *     tags:
  *       - Workout Controller
@@ -118,6 +118,12 @@ const addWorkout = async(req, res) => {
  *             schema:
  *               type: object
  *               properties:
+ *                 _id: 
+ *                   type: string
+ *                   example: "664fe59d90ac40e2283100ae"
+ *                 user:
+ *                   type: string
+ *                   example: "jdoe"
  *                 name:
  *                   type: string
  *                   example: "Push Day"
@@ -169,7 +175,7 @@ const getWorkouts = async(req, res) => {
 
 /**
  * @openapi
- * /workout/get-history:
+ * /workout/history:
  *   get:
  *     tags:
  *       - Workout Controller
@@ -254,4 +260,89 @@ const getHistory = async(req, res) => {
     }
 }
 
-module.exports = { addWorkout, getWorkouts, getHistory };
+/**
+ * @openapi
+ * /workout/{id}:
+ *   get:
+ *     tags:
+ *       - Workout Controller
+ *     summary: Get the history of an exercise
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the workout
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content: 
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id: 
+ *                   type: string
+ *                   example: "664fe59d90ac40e2283100ae"
+ *                 user:
+ *                   type: string
+ *                   example: "jdoe"
+ *                 name:
+ *                   type: string
+ *                   example: "Push Day"
+ *                 date:
+ *                   type: string
+ *                   example: "2024/05/20"
+ *                 exercises:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       exercise:
+ *                         type: string
+ *                         example: "Bench Press"
+ *                       sets:
+ *                         type: number
+ *                         example: 1
+ *                       setInfo:
+ *                         type: array
+ *                         items:
+ *                           type: object
+ *                           properties:
+ *                             weight:
+ *                               type: number
+ *                               example: 135
+ *                             reps:
+ *                               type: number
+ *                               example: 5
+ *                             notes:
+ *                               type: string
+ *                               example: "Felt relatively light"
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: Workout not found
+ *       500:
+ *         description: Internal server error
+ */
+const getWorkoutById = async(req, res) => {
+    console.log("here");
+    if(!req?.params?.id) return res.status(400).json({ 'message' : 'id is required '});
+
+    try {
+        const workout = await Workout.findOne({ _id : req.params.id }).exec();
+        if(!workout) {
+            return res.status(404).json({ 'message' : `No workout found with id ${$req.params.id}`});
+        }
+        
+        if(workout.user !== req.user) {
+            return res.sendStatus(403);
+        }
+        res.status(200).json(workout);
+    } catch (err) {
+        res.status(500).json({ 'message' : err.message });
+    }
+}
+
+module.exports = { addWorkout, getWorkouts, getHistory, getWorkoutById };
