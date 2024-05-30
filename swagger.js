@@ -5,7 +5,7 @@ const swaggerDefinition = {
     info: {
         title: 'Fitness Tracker API',
         version: '1.0.0',
-        description: 'API for a fitness tracker app',
+        description: 'API to track workouts',
     },
     servers: [
         {
