@@ -10,7 +10,4 @@ router.get('/:id', verifyRoles(ROLES_LIST.User), controller.getWorkoutById);
 router.put('/:id', verifyRoles(ROLES_LIST.User), controller.updateWorkout);
 router.delete('/:id', verifyRoles(ROLES_LIST.User), controller.deleteWorkoutById);
 
-//should move to the exercise controller later
-router.get('/history', controller.getHistory);
-
 module.exports = router;
