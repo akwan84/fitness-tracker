@@ -469,4 +469,29 @@ const updateWorkout = async(req, res) => {
     }
 }
 
-module.exports = { addWorkout, getWorkouts, getHistory, getWorkoutById, updateWorkout };
+const deleteWorkoutById = async(req, res) => {
+    try {
+        const user = req.user;
+
+        //get the workout with the specified ID
+        if(!req?.params?.id) return res.status(400).json({ 'message' : 'id is required '});
+
+        //find the workout
+        const workout = await Workout.findOne({ _id : req.params.id }).exec();
+        if(!workout) {
+            return res.status(404).json({ 'message' : `No workout found with id ${req.params.id}`});
+        }
+
+        //do not allow if the workout does not belong to the user
+        if(workout.user !== user) {
+            return res.sendStatus(403);
+        }
+
+        await workout.deleteOne({ _id : req.body.id });
+        res.status(200).json({ "message" : "Workout deleted successfully" });
+    } catch (err) {
+        res.status(500).json({ "message" : err.message});
+    }
+}
+
+module.exports = { addWorkout, getWorkouts, getHistory, getWorkoutById, updateWorkout, deleteWorkoutById };

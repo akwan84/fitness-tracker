@@ -8,7 +8,7 @@ router.post('/', verifyRoles(ROLES_LIST.User), controller.addWorkout);
 router.get('/', verifyRoles(ROLES_LIST.User), controller.getWorkouts);
 router.get('/:id', verifyRoles(ROLES_LIST.User), controller.getWorkoutById);
 router.put('/:id', verifyRoles(ROLES_LIST.User), controller.updateWorkout);
-//delete workout by id
+router.delete('/:id', verifyRoles(ROLES_LIST.User), controller.deleteWorkoutById);
 
 //should move to the exercise controller later
 router.get('/history', controller.getHistory);
