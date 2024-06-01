@@ -6,7 +6,7 @@ const Workout = require('../model/Workout');
  * /workout:
  *   post:
  *     tags:
- *       - Workout Controller
+ *       - Workout
  *     summary: Create a new workout
  *     security: 
  *       - bearerAuth: []
@@ -108,7 +108,7 @@ const addWorkout = async(req, res) => {
  * /workout:
  *   get:
  *     tags:
- *       - Workout Controller
+ *       - Workout
  *     summary: Get all workouts of a user
  *     responses:
  *       200:
@@ -178,7 +178,7 @@ const getWorkouts = async(req, res) => {
  * /workout/{id}:
  *   get:
  *     tags:
- *       - Workout Controller
+ *       - Workout
  *     summary: Get the history of an exercise
  *     parameters:
  *       - in: path
@@ -232,6 +232,8 @@ const getWorkouts = async(req, res) => {
  *                             notes:
  *                               type: string
  *                               example: "Felt relatively light"
+ *       400:
+ *         description: ID not provided
  *       403:
  *         description: Forbidden
  *       404:
@@ -262,7 +264,7 @@ const getWorkoutById = async(req, res) => {
  * /workout/{id}:
  *   put:
  *     tags:
- *       - Workout Controller
+ *       - Workout
  *     summary: Create a new workout
  *     security: 
  *       - bearerAuth: []
@@ -382,6 +384,32 @@ const updateWorkout = async(req, res) => {
     }
 }
 
+/**
+ * @openapi
+ * /workout/{id}:
+ *   delete:
+ *     tags:
+ *       - Workout
+ *     summary: Get the history of an exercise
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the workout
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: ID not provided
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: Workout not found
+ *       500:
+ *         description: Internal server error
+ */
 const deleteWorkoutById = async(req, res) => {
     try {
         const user = req.user;

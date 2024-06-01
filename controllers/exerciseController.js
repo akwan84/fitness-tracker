@@ -34,7 +34,7 @@ const addExercise = async(req, res) => {
  * /workout/history:
  *   get:
  *     tags:
- *       - Exercise Controller
+ *       - Exercise
  *     summary: Get the history of an exercise
  *     requestBody:
  *       required: true
