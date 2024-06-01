@@ -1,4 +1,5 @@
 const User = require('../model/User');
+const Exercise = require('../model/Exercise');
 const bcrypt = require('bcrypt');
 
 const handleNewUser = async(req, res) => {
@@ -17,26 +18,16 @@ const handleNewUser = async(req, res) => {
         const encryptedPwd = await bcrypt.hash(pwd, 10);
 
         //create and store the new user
-        const newUser = await User.create({ 
+        await User.create({ 
             "username": user, 
             "password": encryptedPwd,
         });
 
-        //add the new user to the workout database
-        /*const workoutData = require('../model/workouts.json');
-        workoutData[user] = [];
-        await fsPromises.writeFile(
-            path.join(__dirname, '..', 'model', 'workouts.json'),
-            JSON.stringify(workoutData)
-        );
-
-        //add the new user to the exercises database
-        const exerciseData = require('../model/exercises.json');
-        exerciseData[user] = [];
-        await fsPromises.writeFile(
-            path.join(__dirname, '..', 'model', 'exercises.json'),
-            JSON.stringify(exerciseData)
-        );*/
+        //create the new user in the exercises collection
+        await Exercise.create({
+            "user": user,
+            "exercises": []
+        });
 
         res.status(201).json({ "message": `User ${user} has been created successfully`})
     } catch (err) {
