@@ -4,7 +4,7 @@ function App() {
   // State to store user input
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [token, setToken] = useState('');
+  let token = '';
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleRefresh = async () => {
@@ -20,7 +20,7 @@ function App() {
       });
       const data = await response.json();
       console.log(data);
-      setToken(data["accessToken"]);
+      token = data["accessToken"];
     } catch(err) {
       console.log(err.stack);
     }
@@ -38,27 +38,43 @@ function App() {
       });
       const data = await response.json();
       console.log(data);
-      //setToken(data["accessToken"]);
+      token = data["accessToken"];
     } catch(err) {
       console.log(err.stack);
     }
   };
 
-  /*const makeRequest = async () => {
+  const makeRequest = async () => {
     try {
-      const response = await fetch('http://localhost:3500/employees', {
+      let response = await fetch('http://localhost:3500/workout/664fe59d90ac40e2283100ae', {
         method: 'GET',
         headers: { 
           'Authorization': `Bearer ${token}`
         },
       });
 
+      if(response.status === 403) {
+        console.log("Refreshing Token");
+        await handleRefresh();
+        response = await fetch('http://localhost:3500/workout/664fe59d90ac40e2283100ae', {
+          method: 'GET',
+          headers: { 
+            'Authorization': `Bearer ${token}`
+          },
+        });
+        console.log(response.status);
+      }
+
+      if (response.status !== 200) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
       console.log(data);
     } catch(err) {
       console.log(err.stack);
     }
-  }*/
+  }
 
   return (
     <div>
@@ -82,7 +98,7 @@ function App() {
           />
           <br />
           <button onClick={handleLogin}>Login</button>
-          <button onClick={handleRefresh}>Refresh</button>
+          <button onClick={makeRequest}>Request</button>
         </div>
       )}
     </div>
