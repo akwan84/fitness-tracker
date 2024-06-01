@@ -21,10 +21,10 @@ const Exercise = require('../model/Exercise');
  *     responses:
  *       201:
  *         description: Success
+ *       400:
+ *         description: Missing exercise
  *       403:
  *         description: Forbidden
- *       404:
- *         description: User not found
  *       409:
  *         description: Duplicate exercise
  *       500:
@@ -34,23 +34,74 @@ const addExercise = async(req, res) => {
     try {
         const user = req.user;
 
+        //get the exercise from the request body
         const { exercise } = req.body;
         if(!exercise) return res.status(400).json({ "message": "Exercise is required" });
 
+        //get the exercises created by the user
         const exerciseData = await Exercise.findOne({ user : user}).exec();
-        if(!exerciseData) {
-            return res.status(404).json({ 'message' : 'No exercises found' });
-        }
 
+        //check for duplicate exercises
         const duplicateExercise = exerciseData.exercises.find(element => element === exercise);
         if(duplicateExercise) return res.status(409).json({ "message": `Exercise ${exercise} already exists`});
 
+        //update the exercise list
         const exercisesCopy = [...exerciseData.exercises, exercise];
         exerciseData.exercises = exercisesCopy;
 
         await exerciseData.save();
 
         res.status(201).json({ "message": `Exercise added successfully`});
+    } catch (err) {
+        res.status(500).json({ "message": err.message });
+    }
+}
+
+/**
+ * @openapi
+ * /exercise:
+ *   delete:
+ *     tags:
+ *       - Exercise
+ *     summary: Delete an exercise created by a user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               exercise:
+ *                 type: string
+ *                 example: "Bench Press"
+ *     responses:
+ *       201:
+ *         description: Success
+ *       400:
+ *         description: Missing exercise
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ */
+const deleteExercise = async(req, res) => {
+    try {
+        const user = req.user;
+
+        //get the exercise from the request body
+        const { exercise } = req.body;
+        if(!exercise) return res.status(400).json({ "message": "Exercise is required" });
+
+        //get the exercises created by the user
+        const exerciseData = await Exercise.findOne({ user : user}).exec();
+
+        //remove the desired exercise (doesn't matter if it exists or not)
+        const newExercises = exerciseData.exercises.filter(element => element !== exercise);
+        
+        exerciseData.exercises = newExercises;
+        await exerciseData.save();
+
+        res.status(201).json({ "message": `Exercise removed successfully`});
     } catch (err) {
         res.status(500).json({ "message": err.message });
     }
@@ -143,4 +194,4 @@ const getHistory = async(req, res) => {
     }
 }
 
-module.exports = { addExercise, getHistory };
+module.exports = { addExercise, getHistory, deleteExercise };
