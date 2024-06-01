@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 function App() {
   // State to store user input
@@ -75,6 +75,10 @@ function App() {
       console.log(err.stack);
     }
   }
+
+  useEffect(() => {
+    handleRefresh()
+  }, [])
 
   return (
     <div>
