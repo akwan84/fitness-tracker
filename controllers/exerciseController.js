@@ -1,37 +1,64 @@
-const exerciseDB = {
-    exercises: require('../model/exercises.json'),
-    setExercises: function(data) { this.workouts = data }
-}
-
-const fsPromises = require('fs').promises;
-const path = require('path');
-
-const mongoose = require('mongoose');
 const Workout = require('../model/Workout');
+const Exercise = require('../model/Exercise');
 
+/**
+ * @openapi
+ * /exercise:
+ *   post:
+ *     tags:
+ *       - Exercise
+ *     summary: Add an exercise for a user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               exercise:
+ *                 type: string
+ *                 example: "Bench Press"
+ *     responses:
+ *       201:
+ *         description: Success
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: User not found
+ *       409:
+ *         description: Duplicate exercise
+ *       500:
+ *         description: Internal server error
+ */
 const addExercise = async(req, res) => {
-    const user = req.user;
+    try {
+        const user = req.user;
 
-    const { exercise } = req.body;
-    if(!exercise) return res.status(400).json({ "message": "Exercise is required" });
+        const { exercise } = req.body;
+        if(!exercise) return res.status(400).json({ "message": "Exercise is required" });
 
-    const duplicateExercise = exerciseDB.exercises[user].find(element => element === exercise);
-    if(duplicateExercise) return res.status(409).json({ "message": `Exercise ${exercise} already exists`});
+        const exerciseData = await Exercise.findOne({ user : user}).exec();
+        if(!exerciseData) {
+            return res.status(404).json({ 'message' : 'No exercises found' });
+        }
 
-    const exercisesCopy = exerciseDB.exercises;
-    exercisesCopy[user] = [...exercisesCopy[user], exercise];
-    exerciseDB.setExercises(exercisesCopy);
+        const duplicateExercise = exerciseData.exercises.find(element => element === exercise);
+        if(duplicateExercise) return res.status(409).json({ "message": `Exercise ${exercise} already exists`});
 
-    fsPromises.writeFile(
-        path.join(__dirname, '..', 'model', 'exercises.json'),
-        JSON.stringify(exercisesCopy)
-    );
-    res.status(201).json({ "message": `Exercise added successfully`})
+        const exercisesCopy = [...exerciseData.exercises, exercise];
+        exerciseData.exercises = exercisesCopy;
+
+        await exerciseData.save();
+
+        res.status(201).json({ "message": `Exercise added successfully`});
+    } catch (err) {
+        res.status(500).json({ "message": err.message });
+    }
 }
 
 /**
  * @openapi
- * /workout/history:
+ * /exercise/history:
  *   get:
  *     tags:
  *       - Exercise

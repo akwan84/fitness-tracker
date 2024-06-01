@@ -179,7 +179,7 @@ const getWorkouts = async(req, res) => {
  *   get:
  *     tags:
  *       - Workout
- *     summary: Get the history of an exercise
+ *     summary: Get a workout by id
  *     parameters:
  *       - in: path
  *         name: id
@@ -265,7 +265,7 @@ const getWorkoutById = async(req, res) => {
  *   put:
  *     tags:
  *       - Workout
- *     summary: Create a new workout
+ *     summary: Update an existing workout
  *     security: 
  *       - bearerAuth: []
  *     parameters:
@@ -390,7 +390,7 @@ const updateWorkout = async(req, res) => {
  *   delete:
  *     tags:
  *       - Workout
- *     summary: Get the history of an exercise
+ *     summary: Delete an existing workout
  *     parameters:
  *       - in: path
  *         name: id
