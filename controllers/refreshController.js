@@ -2,6 +2,29 @@ const User = require('../model/User');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
+/**
+ * @openapi
+ * /refresh:
+ *   get:
+ *     tags:
+ *       - User
+ *     summary: Refresh access token
+ *     responses:
+ *       200:
+ *         description: Successful refresh
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR4cCI6IkpXVCJ9.eyJVc2VySW5mbyI6eyJ1c2VybmFtZSI6ImFrdRFuODQiLCJyb2xlcyI6WzIwMDEsbnVsbCxudWxsXO0sImlhdCI6MTcxNjUxOTQwNSwiZXhwIjoxNzE2NTIxMjA1fQ.yzAu0wJYNshVhcaVhVH9qoZClrtVUrMUVBEr4i-ftSQ"
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ */
 const handleRefresh = async (req, res) => {
     //check whether the jwt cookie exists (i.e. where the refresh token is stored)
     const cookies = req.cookies;

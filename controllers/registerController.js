@@ -2,6 +2,36 @@ const User = require('../model/User');
 const Exercise = require('../model/Exercise');
 const bcrypt = require('bcrypt');
 
+/**
+ * @openapi
+ * /register:
+ *   post:
+ *     tags:
+ *       - User
+ *     summary: Register a new user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user:
+ *                 type: string
+ *                 example: jdoe
+ *               pwd:
+ *                 type: string
+ *                 example: abc123
+ *     responses:
+ *       201:
+ *         description: Successful success
+ *       400:
+ *         description: Bad request body
+ *       409:
+ *         description: Duplicate user
+ *       500:
+ *         description: Internal server error
+ */
 const handleNewUser = async(req, res) => {
     //get the username and password
     const { user, pwd } = req.body;
