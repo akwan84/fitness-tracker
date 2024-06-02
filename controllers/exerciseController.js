@@ -162,6 +162,21 @@ const getExercises = async(req, res) => {
  *     tags:
  *       - Exercise
  *     summary: Get the history of an exercise
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           type: number
+ *         default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: pageSize
+ *         required: false
+ *         schema:
+ *           type: number
+ *         default: 10
+ *         description: Results per page
  *     requestBody:
  *       required: true
  *       content:
@@ -178,30 +193,39 @@ const getExercises = async(req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   date:
- *                     type: string
- *                     example: "2020-04-20T04:00:00.000Z"
- *                   sets:
- *                     type: number
- *                     example: 1
- *                   setInfo:
- *                     type: array
- *                     items:
- *                       type: object
- *                       properties:
- *                         weight:
- *                           type: number
- *                           example: 135
- *                         reps:
- *                           type: number
- *                           example: 10
- *                         notes:
- *                           type: string
- *                           example: "Very hard set"
+ *               type: object
+ *               properties:
+ *                 page:
+ *                   type: number
+ *                   example: 1
+ *                 pageSize:
+ *                   type: number
+ *                   example: 10
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       date:
+ *                         type: string
+ *                         example: "2020-04-20T04:00:00.000Z"
+ *                       sets:
+ *                         type: number
+ *                         example: 1
+ *                       setInfo:
+ *                         type: array
+ *                         items:
+ *                           type: object
+ *                           properties:
+ *                             weight:
+ *                               type: number
+ *                               example: 135
+ *                             reps:
+ *                               type: number
+ *                               example: 10
+ *                             notes:
+ *                               type: string
+ *                               example: "Very hard set"
  *       403:
  *         description: Forbidden
  *       500:
@@ -211,12 +235,17 @@ const getHistory = async(req, res) => {
     try {
         const user = req.user;
 
-        //Get the exercise to search for
+        //get the exercise to search for
         const { exercise } = req.body;
         if(!exercise) return res.status(400).json({ "message" : "exercise is required" });
 
-        //Get all the workouts of the user and sort in ascending order by date
-        const result = await Workout.find({ "user" : user }).sort({ date : 1 });
+        //get the page and page size
+        const page = parseInt(req.query.page || 1);
+        const pageSize = parseInt(req.query.pageSize || 10);
+        const skip = (page - 1) * pageSize;
+
+        //get all the workouts of the user and sort in ascending order by date
+        const result = await Workout.find({ "user" : user }).sort({ date : -1 }).skip(skip).limit(pageSize).exec();
 
         const response = [];
 
@@ -236,7 +265,13 @@ const getHistory = async(req, res) => {
                 response.push(resObj);
             });
         });
-        res.status(200).json(response);
+        res.status(200).json(
+            {
+                "page" : page,
+                "pageSize" : pageSize,
+                "data" : response
+            }
+        );
     } catch (err) {
         res.status(500).json({ "message": err.message });
     }

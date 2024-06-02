@@ -110,6 +110,21 @@ const addWorkout = async(req, res) => {
  *     tags:
  *       - Workout
  *     summary: Get all workouts of a user
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           type: number
+ *         default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: pageSize
+ *         required: false
+ *         schema:
+ *           type: number
+ *         default: 10
+ *         description: Results per page
  *     responses:
  *       200:
  *         description: Success
@@ -118,43 +133,54 @@ const addWorkout = async(req, res) => {
  *             schema:
  *               type: object
  *               properties:
- *                 _id: 
- *                   type: string
- *                   example: "664fe59d90ac40e2283100ae"
- *                 user:
- *                   type: string
- *                   example: "jdoe"
- *                 name:
- *                   type: string
- *                   example: "Push Day"
- *                 date:
- *                   type: string
- *                   example: "2024/05/20"
- *                 exercises:
+ *                 page:
+ *                   type: number
+ *                   example: 1
+ *                 pageSize: 
+ *                   type: number
+ *                   example: 10
+ *                 data: 
  *                   type: array
  *                   items:
  *                     type: object
  *                     properties:
- *                       exercise:
+ *                       _id: 
  *                         type: string
- *                         example: "Bench Press"
- *                       sets:
- *                         type: number
- *                         example: 1
- *                       setInfo:
+ *                         example: "664fe59d90ac40e2283100ae"
+ *                       user:
+ *                         type: string
+ *                         example: "jdoe"
+ *                       name:
+ *                         type: string
+ *                         example: "Push Day"
+ *                       date:
+ *                         type: string
+ *                         example: "2024/05/20"
+ *                       exercises:
  *                         type: array
  *                         items:
  *                           type: object
  *                           properties:
- *                             weight:
- *                               type: number
- *                               example: 135
- *                             reps:
- *                               type: number
- *                               example: 5
- *                             notes:
+ *                             exercise:
  *                               type: string
- *                               example: "Felt relatively light"
+ *                               example: "Bench Press"
+ *                             sets:
+ *                               type: number
+ *                               example: 1
+ *                             setInfo:
+ *                               type: array
+ *                               items:
+ *                                 type: object
+ *                                 properties:
+ *                                   weight:
+ *                                     type: number
+ *                                     example: 135
+ *                                   reps:
+ *                                     type: number
+ *                                     example: 5
+ *                                   notes:
+ *                                     type: string
+ *                                     example: "Felt relatively light"
  *       403:
  *         description: Forbidden
  *       500:
@@ -164,10 +190,20 @@ const getWorkouts = async(req, res) => {
     const user = req.user;
 
     try {
-        //Get all the workouts of the user and sort in ascending order by date
-        const result = await Workout.find({ "user" : user}).sort({ date: 1 });
+        const page = parseInt(req.query.page || 1);
+        const pageSize = parseInt(req.query.pageSize || 10);
+        const skip = (page - 1) * pageSize;
 
-        res.status(200).json(result);
+        //Get all the workouts of the user and sort in ascending order by date
+        const result = await Workout.find({ "user" : user}).sort({ date: -1 }).skip(skip).limit(pageSize).exec();
+
+        res.status(200).json(
+            {
+                "page" : page,
+                "pageSize" : pageSize,
+                "workouts": result
+            }
+        );
     } catch (err) {
         res.status(500).json({ "message": err.message });
     }
