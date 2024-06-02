@@ -109,6 +109,54 @@ const deleteExercise = async(req, res) => {
 
 /**
  * @openapi
+ * /exercise:
+ *   get:
+ *     tags:
+ *       - Exercise
+ *     summary: Get all exercises created by a user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               exercise:
+ *                 type: string
+ *                 example: "Bench Press"
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 exercises:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "Bench press"
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ */
+const getExercises = async(req, res) => {
+    try {
+        const user = req.user;
+
+        //Get all the exercises of the user
+        const result = await Exercise.findOne({ "user" : user }).exec();
+
+        res.status(200).json({ "exercises" : result.exercises });
+    } catch (err) {
+        res.status(500).json({ "message" : err.message });
+    }
+}
+
+/**
+ * @openapi
  * /exercise/history:
  *   get:
  *     tags:
@@ -160,9 +208,9 @@ const deleteExercise = async(req, res) => {
  *         description: Internal server error
  */
 const getHistory = async(req, res) => {
-    const user = req.user;
-
     try {
+        const user = req.user;
+
         //Get the exercise to search for
         const { exercise } = req.body;
         if(!exercise) return res.status(400).json({ "message" : "exercise is required" });
@@ -194,4 +242,4 @@ const getHistory = async(req, res) => {
     }
 }
 
-module.exports = { addExercise, getHistory, deleteExercise };
+module.exports = { addExercise, getHistory, getExercises, deleteExercise };
