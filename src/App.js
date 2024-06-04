@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import WorkoutDisplay from './WorkoutDisplay';
 
 function App() {
   // State to store user input
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  let token = '';
+  const [token, setToken] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [workoutData, setWorkoutData] = useState(null);
 
   //refresh the access token
   const handleRefresh = async () => {
@@ -29,9 +31,12 @@ function App() {
       
       //print out and store the access token
       const data = await response.json();
-      console.log(data);
-      token = data["accessToken"];
+      setToken(data["accessToken"]);
       setIsLoggedIn(true);
+
+      const workouts = await makeRequest('workout', 'GET', data["accessToken"]);
+      setWorkoutData(workouts);
+
     } catch(err) {
       console.log(err.message);
     }
@@ -57,11 +62,14 @@ function App() {
 
       //log and store the access token
       const data = await response.json();
-      console.log(data);
-      token = data["accessToken"];
+      setToken(data["accessToken"]);
       setIsLoggedIn(true);
       setUsername('');
       setPassword('');
+
+      const workouts = await makeRequest('workout', 'GET', data["accessToken"]);
+      setWorkoutData(workouts);
+
     } catch(err) {
       console.log(err.message);
     }
@@ -80,18 +88,18 @@ function App() {
       if(response.status === 500) throw new Error('Internal server error');
 
       //log and store the access token
-      token = '';
+      setToken('');
       setIsLoggedIn(false);
     } catch(err) {
       console.log(err.message);
     }
   };
 
-  const makeRequest = async () => {
+  const makeRequest = async (route, method, token) => {
     try {
       //attempt to call the endpoint
-      let response = await fetch('http://localhost:3500/workout/664fe59d90ac40e2283100ae', {
-        method: 'GET',
+      let response = await fetch(`http://localhost:3500/${route}`, {
+        method: method,
         headers: { 
           'Authorization': `Bearer ${token}`
         },
@@ -101,8 +109,8 @@ function App() {
         //try refreshing the token if the call returns a 403
         console.log("Refreshing Token");
         await handleRefresh();
-        response = await fetch('http://localhost:3500/workout/664fe59d90ac40e2283100ae', {
-          method: 'GET',
+        response = await fetch(`http://localhost:3500/${route}`, {
+          method: method,
           headers: { 
             'Authorization': `Bearer ${token}`
           },
@@ -114,7 +122,8 @@ function App() {
       }
 
       const data = await response.json();
-      console.log(data);
+      //console.log(data);
+      return data;
     } catch(err) {
       console.log(err.message);
     }
@@ -130,8 +139,9 @@ function App() {
       {isLoggedIn ? (
         <div>
           <h2>Welcome!</h2>
+          <WorkoutDisplay workoutData={workoutData}/>
           <button onClick={handleLogout}>Logout</button>
-          <button onClick={makeRequest}>Request</button>
+          <button onClick={() => makeRequest('workout/664fe59d90ac40e2283100ae', 'GET', token)}>Request</button>
         </div>
       ) : (
         <div>
