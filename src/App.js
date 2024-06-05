@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import WorkoutDisplay from './WorkoutDisplay';
+import WorkoutInfo from './WorkoutInfo';
 
 function App() {
   // State to store user input
@@ -8,6 +9,9 @@ function App() {
   const [token, setToken] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [workoutData, setWorkoutData] = useState(null);
+  const [showWorkouts, setShowWorkouts] = useState(true);
+  const [showWorkoutInfo, setShowWorkoutInfo] = useState(false);
+  const [displayWorkout, setDisplayWorkout] = useState(null);
 
   //refresh the access token
   const handleRefresh = async () => {
@@ -137,12 +141,28 @@ function App() {
   return (
     <div>
       {isLoggedIn ? (
-        <div>
-          <h2>Welcome!</h2>
-          <WorkoutDisplay workoutData={workoutData}/>
-          <button onClick={handleLogout}>Logout</button>
-          <button onClick={() => makeRequest('workout/664fe59d90ac40e2283100ae', 'GET', token)}>Request</button>
-        </div>
+        showWorkouts ? (
+          <div>
+            <h2>Welcome!</h2>
+            <WorkoutDisplay 
+              workoutData={workoutData} 
+              setDisplayWorkout={setDisplayWorkout} 
+              setShowWorkouts={setShowWorkouts} 
+              setShowWorkoutInfo={setShowWorkoutInfo}
+            />
+            <button onClick={handleLogout}>Logout</button>
+            <button onClick={() => makeRequest('workout/664fe59d90ac40e2283100ae', 'GET', token)}>Request</button>
+          </div>
+        ) : showWorkoutInfo ? (
+          <WorkoutInfo 
+            workout={displayWorkout} 
+            setDisplayWorkout={setDisplayWorkout} 
+            setShowWorkouts={setShowWorkouts} 
+            setShowWorkoutInfo={setShowWorkoutInfo}
+          />
+        ) : (
+          <h2>Error</h2>
+        )
       ) : (
         <div>
           <h2>Login</h2>

@@ -1,12 +1,18 @@
-const WorkoutDisplay = ({ workoutData }) => {
+import WorkoutWidget from "./WorkoutWidget";
+
+const WorkoutDisplay = ({ workoutData, setDisplayWorkout, setShowWorkouts, setShowWorkoutInfo }) => {
     return (
         <div>
             {!workoutData && <h2>No Workouts To Show</h2>}
             {workoutData && workoutData.workouts.map(workout => (
-                <div>
-                    <p>{workout.name}</p>
-                    <p>{workout.date}</p>
-                </div>
+                <WorkoutWidget 
+                    name={workout.name} 
+                    date={workout.date} 
+                    workout={workout} 
+                    setDisplayWorkout={setDisplayWorkout} 
+                    setShowWorkouts={setShowWorkouts} 
+                    setShowWorkoutInfo={setShowWorkoutInfo}
+                />
             ))}
         </div>
     );
