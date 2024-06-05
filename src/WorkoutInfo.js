@@ -1,3 +1,5 @@
+import ExerciseWidget from "./ExerciseWidget";
+
 const WorkoutInfo = ({ workout, setDisplayWorkout, setShowWorkouts, setShowWorkoutInfo }) => {
     const goBack = () => {
         setDisplayWorkout(null);
@@ -8,10 +10,10 @@ const WorkoutInfo = ({ workout, setDisplayWorkout, setShowWorkouts, setShowWorko
     const date = new Date(workout.date);
     return (
         <div>
-            <h2>{workout.name}</h2>
-            <h3>{`${date.getDate()}/${date.getMonth() < 10 ? '0' : ''}${date.getMonth() + 1}/${date.getFullYear()}`}</h3>
+            <h1>{workout.name}</h1>
+            <h2>{`${date.getDate()}/${date.getMonth() < 10 ? '0' : ''}${date.getMonth() + 1}/${date.getFullYear()}`}</h2>
             {workout.exercises.map(exercise => (
-                <p>{JSON.stringify(exercise)}</p>
+                <ExerciseWidget exercise={exercise} workout={workout}/>
             ))}
             <button onClick={goBack}>Back</button>
         </div>

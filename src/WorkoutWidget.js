@@ -1,4 +1,4 @@
-const WorkoutWidget = ({ name, date, workout, setDisplayWorkout, setShowWorkouts, setShowWorkoutInfo }) => {
+const WorkoutWidget = ({ workout, setDisplayWorkout, setShowWorkouts, setShowWorkoutInfo }) => {
     const showWorkoutInfo = () => {
         setShowWorkouts(false);
         setShowWorkoutInfo(true);
@@ -7,8 +7,8 @@ const WorkoutWidget = ({ name, date, workout, setDisplayWorkout, setShowWorkouts
 
     return (
         <div onClick={showWorkoutInfo}>
-            <p>{name}</p>
-            <p>{date}</p>
+            <h3>{workout.name}</h3>
+            <p>{workout.date}</p>
         </div>
     );
 }
