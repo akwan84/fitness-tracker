@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import WorkoutDisplay from './WorkoutDisplay';
 import WorkoutInfo from './WorkoutInfo';
+import AddWorkoutForm from './AddWorkoutForm';
 
 function App() {
   // State to store user input
@@ -11,7 +12,8 @@ function App() {
   const [workoutData, setWorkoutData] = useState(null);
   const [showWorkouts, setShowWorkouts] = useState(true);
   const [showWorkoutInfo, setShowWorkoutInfo] = useState(false);
-  const [displayWorkout, setDisplayWorkout] = useState(null);
+  const [showAddWorkoutForm, setShowAddWorkoutForm] = useState(false);
+  const [displayWorkout, setDisplayWorkout] = useState(false);
 
   //refresh the access token
   const handleRefresh = async () => {
@@ -133,6 +135,12 @@ function App() {
     }
   }
 
+  const switchToAddWorkout = () => {
+    setShowWorkoutInfo(false);
+    setShowWorkouts(false);
+    setShowAddWorkoutForm(true);
+  }
+
   //if the refresh token is still valid, keep the user logged in and provide a new access token
   useEffect(() => {
     handleRefresh()
@@ -144,6 +152,7 @@ function App() {
         showWorkouts ? (
           <div>
             <h2>Welcome!</h2>
+            <button onClick={switchToAddWorkout}>Add Workout</button>
             <WorkoutDisplay 
               workoutData={workoutData} 
               setDisplayWorkout={setDisplayWorkout} 
@@ -160,6 +169,8 @@ function App() {
             setShowWorkouts={setShowWorkouts} 
             setShowWorkoutInfo={setShowWorkoutInfo}
           />
+        ) : showAddWorkoutForm ? (
+          <AddWorkoutForm/>
         ) : (
           <h2>Error</h2>
         )
