@@ -13,7 +13,7 @@ function App() {
   const [showWorkouts, setShowWorkouts] = useState(true);
   const [showWorkoutInfo, setShowWorkoutInfo] = useState(false);
   const [showAddWorkoutForm, setShowAddWorkoutForm] = useState(false);
-  const [displayWorkout, setDisplayWorkout] = useState(false);
+  const [displayWorkout, setDisplayWorkout] = useState([]);
 
   //refresh the access token
   const handleRefresh = async () => {
@@ -40,7 +40,7 @@ function App() {
       setToken(data["accessToken"]);
       setIsLoggedIn(true);
 
-      const workouts = await makeRequest('workout', 'GET', data["accessToken"]);
+      const workouts = await makeRequest('workout', 'GET', data["accessToken"], null);
       setWorkoutData(workouts);
 
     } catch(err) {
@@ -73,7 +73,7 @@ function App() {
       setUsername('');
       setPassword('');
 
-      const workouts = await makeRequest('workout', 'GET', data["accessToken"]);
+      const workouts = await makeRequest('workout', 'GET', data["accessToken"], null);
       setWorkoutData(workouts);
 
     } catch(err) {
@@ -101,26 +101,28 @@ function App() {
     }
   };
 
-  const makeRequest = async (route, method, token) => {
+  const makeRequest = async (route, method, token, reqBody) => {
     try {
-      //attempt to call the endpoint
-      let response = await fetch(`http://localhost:3500/${route}`, {
+      const options = {
         method: method,
         headers: { 
-          'Authorization': `Bearer ${token}`
-        },
-      });
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      };
+
+      if(reqBody) {
+        options.body = JSON.stringify(reqBody);
+      }
+
+      //attempt to call the endpoint
+      let response = await fetch(`http://localhost:3500/${route}`, options);
 
       if(response.status === 403) {
         //try refreshing the token if the call returns a 403
         console.log("Refreshing Token");
         await handleRefresh();
-        response = await fetch(`http://localhost:3500/${route}`, {
-          method: method,
-          headers: { 
-            'Authorization': `Bearer ${token}`
-          },
-        });
+        response = await fetch(`http://localhost:3500/${route}`, options);
       }
 
       if (response.status !== 200) {
@@ -170,7 +172,14 @@ function App() {
             setShowWorkoutInfo={setShowWorkoutInfo}
           />
         ) : showAddWorkoutForm ? (
-          <AddWorkoutForm/>
+          <AddWorkoutForm
+            makeRequest={makeRequest}
+            token={token}
+            setShowWorkouts={setShowWorkouts}
+            setShowWorkoutInfo={setShowWorkoutInfo}
+            setShowAddWorkoutForm={setShowAddWorkoutForm}
+            setWorkoutData={setWorkoutData}
+          />
         ) : (
           <h2>Error</h2>
         )

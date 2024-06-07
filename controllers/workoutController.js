@@ -63,6 +63,7 @@ const Workout = require('../model/Workout');
 const addWorkout = async(req, res) => {
     const user = req.user; //set by the verifyJwt middleware, should be here if no issues in middleware
 
+    console.log(req.body);
     const {name, date, exercises} = req.body;
     if(!name || !date || !exercises) return res.status(400).json({ "message": "Name, date, and exercises are required" });
    

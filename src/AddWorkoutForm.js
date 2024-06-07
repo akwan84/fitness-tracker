@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const AddWorkoutForm = () => {
+const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInfo, setShowAddWorkoutForm, setWorkoutData }) => {
     const [name, setName] = useState('');
     const [date, setDate] = useState('');
     const [exercises, setExercises] = useState([]);
@@ -41,6 +41,35 @@ const AddWorkoutForm = () => {
         const values = [...exercises];
         values[index1]["setInfo"].splice(index2, 1);
         setExercises(values);
+    }
+
+    const handleSubmit = async() => {
+        const reqBody = {
+            "name" : name,
+            "date" : date,
+        };
+
+        const exerciseList = [];
+
+        for(let i = 0; i < exercises.length; i++) {
+            exerciseList.push({
+                "exercise" : exercises[i]["exercise"],
+                "sets" : exercises[i]["setInfo"].length,
+                "setInfo" : exercises[i]["setInfo"]
+            });
+        }
+        reqBody["exercises"] = exerciseList;
+
+        await makeRequest('workout', 'POST', token, reqBody);
+
+        //TODO: Switch back to the workout display page and re-request the workouts
+        setShowWorkoutInfo(false);
+        setShowWorkouts(true);
+        setShowAddWorkoutForm(false);
+
+        const workouts = await makeRequest('workout', 'GET', token, null);
+        setWorkoutData(workouts);
+
     }
 
     const removeExercise = (index) => {
@@ -98,6 +127,7 @@ const AddWorkoutForm = () => {
                 </div>
             ))}
             <button onClick={addExercise}>Add Exercise</button>
+            <button onClick={handleSubmit}>Submit</button>
         </div>
     );
 }
