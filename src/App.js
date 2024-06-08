@@ -7,6 +7,9 @@ function App() {
   // State to store user input
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [regUsername, setRegUsername] = useState('');
+  const [regPassword, setRegPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [token, setToken] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [workoutData, setWorkoutData] = useState(null);
@@ -146,7 +149,47 @@ function App() {
   //if the refresh token is still valid, keep the user logged in and provide a new access token
   useEffect(() => {
     handleRefresh()
-  }, [])
+  }, []);
+
+  const handleRegister = async () => {
+    if(!regUsername || !regPassword || !confirmPassword) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    if(regPassword !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    const user = regUsername;
+    const pwd = regPassword;
+
+    try{
+      const response = await fetch('http://localhost:3500/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', 
+        body: JSON.stringify({ user, pwd })
+      });
+
+      if(response.status === 409) {
+        alert(`Username ${regUsername} has been taken`);
+        return;
+      }
+      if(response.status === 500) {
+        alert("Error in registration");
+        return;
+      }
+
+      alert("Registration Successful");
+      setRegUsername('');
+      setRegPassword('');
+      setConfirmPassword('');
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
 
   return (
     <div>
@@ -204,6 +247,29 @@ function App() {
           />
           <br />
           <button onClick={handleLogin}>Login</button>
+          <h2>Sign Up</h2>
+          <input
+            type="text"
+            placeholder="Username"
+            value={regUsername}
+            onChange={(e) => setRegUsername(e.target.value)}
+          />
+          <br />
+          <input
+            type="password"
+            placeholder="Password"
+            value={regPassword}
+            onChange={(e) => setRegPassword(e.target.value)}
+          />
+          <br />
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+          <br />
+          <button onClick={handleRegister}>Sign Up</button>
         </div>
       )}
     </div>
