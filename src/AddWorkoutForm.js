@@ -62,7 +62,6 @@ const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInf
 
         await makeRequest('workout', 'POST', token, reqBody);
 
-        //TODO: Switch back to the workout display page and re-request the workouts
         setShowWorkoutInfo(false);
         setShowWorkouts(true);
         setShowAddWorkoutForm(false);

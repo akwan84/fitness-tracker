@@ -156,10 +156,13 @@ function App() {
             <h2>Welcome!</h2>
             <button onClick={switchToAddWorkout}>Add Workout</button>
             <WorkoutDisplay 
+              makeRequest={makeRequest}
+              token={token}
               workoutData={workoutData} 
               setDisplayWorkout={setDisplayWorkout} 
               setShowWorkouts={setShowWorkouts} 
               setShowWorkoutInfo={setShowWorkoutInfo}
+              setWorkoutData={setWorkoutData}
             />
             <button onClick={handleLogout}>Logout</button>
             <button onClick={() => makeRequest('workout/664fe59d90ac40e2283100ae', 'GET', token)}>Request</button>
