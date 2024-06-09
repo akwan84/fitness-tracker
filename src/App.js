@@ -4,6 +4,8 @@ import WorkoutInfo from './WorkoutInfo';
 import AddWorkoutForm from './AddWorkoutForm';
 
 function App() {
+  const PAGE_SIZE = 5;
+
   // State to store user input
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -17,6 +19,7 @@ function App() {
   const [showWorkoutInfo, setShowWorkoutInfo] = useState(false);
   const [showAddWorkoutForm, setShowAddWorkoutForm] = useState(false);
   const [displayWorkout, setDisplayWorkout] = useState([]);
+  const [curPage, setCurPage] = useState(1);
 
   //refresh the access token
   const handleRefresh = async () => {
@@ -43,7 +46,7 @@ function App() {
       setToken(data["accessToken"]);
       setIsLoggedIn(true);
 
-      const workouts = await makeRequest('workout', 'GET', data["accessToken"], null);
+      const workouts = await makeRequest(`workout?pageSize=${PAGE_SIZE}&page=1`, 'GET', data["accessToken"], null);
       setWorkoutData(workouts);
 
     } catch(err) {
@@ -76,7 +79,7 @@ function App() {
       setUsername('');
       setPassword('');
 
-      const workouts = await makeRequest('workout', 'GET', data["accessToken"], null);
+      const workouts = await makeRequest(`workout?pageSize=${PAGE_SIZE}&page=1`, 'GET', data["accessToken"], null);
       setWorkoutData(workouts);
 
     } catch(err) {
@@ -190,6 +193,30 @@ function App() {
       console.log(err.message);
     }
   }
+  
+  const getNextPage = async () => {
+    try {
+      const workouts = await makeRequest(`workout?pageSize=${PAGE_SIZE}&page=${curPage + 1}`, 'GET', token, null);
+      if(workouts.workouts.length > 0) {
+        setWorkoutData(workouts);
+        setCurPage(curPage + 1);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const getPrevPage = async () => {
+    try {
+      if(curPage > 1){
+        const workouts = await makeRequest(`workout?pageSize=${PAGE_SIZE}&page=${curPage - 1}`, 'GET', token, null);
+        setWorkoutData(workouts);
+        setCurPage(curPage - 1);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <div>
@@ -208,11 +235,14 @@ function App() {
               setWorkoutData={setWorkoutData}
             />
             <button onClick={handleLogout}>Logout</button>
-            <button onClick={() => makeRequest('workout/664fe59d90ac40e2283100ae', 'GET', token)}>Request</button>
+            <br/>
+            <button onClick={getPrevPage}>Previous</button>
+            <button onClick={getNextPage}>Next</button>
+            <p>Page: {curPage}</p>
           </div>
         ) : showWorkoutInfo ? (
           <WorkoutInfo 
-            workout={displayWorkout} 
+            workout={displayWorkout}  
             setDisplayWorkout={setDisplayWorkout} 
             setShowWorkouts={setShowWorkouts} 
             setShowWorkoutInfo={setShowWorkoutInfo}
