@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInfo, setShowAddWorkoutForm, setWorkoutData }) => {
-    const [name, setName] = useState('');
-    const [date, setDate] = useState('');
-    const [exercises, setExercises] = useState([]);
+const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInfo, setShowAddWorkoutForm, setWorkoutData, update, id, workoutData }) => {
+    const [name, setName] = useState(workoutData ? workoutData.name : '');
+    const [date, setDate] = useState(workoutData ? `${workoutData.date.substring(0, 4)}-${workoutData.date.substring(5, 7)}-${workoutData.date.substring(8,10)}` : '');
+    const [exercises, setExercises] = useState(workoutData ? workoutData.exercises : []);
     
     const addExercise = () => {
         const newExercise = {
@@ -60,7 +60,11 @@ const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInf
         }
         reqBody["exercises"] = exerciseList;
 
-        await makeRequest('workout', 'POST', token, reqBody);
+        if(!update) {
+            await makeRequest('workout', 'POST', token, reqBody);
+        } else {
+            await makeRequest(`workout/${id}`, 'PUT', token, reqBody);
+        }
 
         setShowWorkoutInfo(false);
         setShowWorkouts(true);
@@ -68,7 +72,6 @@ const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInf
 
         const workouts = await makeRequest('workout', 'GET', token, null);
         setWorkoutData(workouts);
-
     }
 
     const removeExercise = (index) => {
@@ -126,7 +129,9 @@ const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInf
                 </div>
             ))}
             <button onClick={addExercise}>Add Exercise</button>
-            <button onClick={handleSubmit}>Submit</button>
+            {!update && <button onClick={handleSubmit}>Submit</button>}
+            {update && <button onClick={handleSubmit}>Update</button>}
+            {/* TODO: Add a cancellation button */}
         </div>
     );
 }

@@ -18,7 +18,8 @@ function App() {
   const [showWorkouts, setShowWorkouts] = useState(true);
   const [showWorkoutInfo, setShowWorkoutInfo] = useState(false);
   const [showAddWorkoutForm, setShowAddWorkoutForm] = useState(false);
-  const [displayWorkout, setDisplayWorkout] = useState([]);
+  const [showUpdateWorkoutForm, setShowUpdateWorkoutForm] = useState(false);
+  const [displayWorkout, setDisplayWorkout] = useState({});
   const [curPage, setCurPage] = useState(1);
 
   //refresh the access token
@@ -246,6 +247,7 @@ function App() {
             setDisplayWorkout={setDisplayWorkout} 
             setShowWorkouts={setShowWorkouts} 
             setShowWorkoutInfo={setShowWorkoutInfo}
+            setShowUpdateWorkoutForm={setShowUpdateWorkoutForm}
           />
         ) : showAddWorkoutForm ? (
           <AddWorkoutForm
@@ -255,6 +257,21 @@ function App() {
             setShowWorkoutInfo={setShowWorkoutInfo}
             setShowAddWorkoutForm={setShowAddWorkoutForm}
             setWorkoutData={setWorkoutData}
+            update={false}
+            id={null}
+            workoutData={null}
+          />
+        ) : showUpdateWorkoutForm ? (
+          <AddWorkoutForm
+            makeRequest={makeRequest}
+            token={token}
+            setShowWorkouts={setShowWorkouts}
+            setShowWorkoutInfo={setShowWorkoutInfo}
+            setShowAddWorkoutForm={setShowAddWorkoutForm}
+            setWorkoutData={setWorkoutData}
+            update={true}
+            id={displayWorkout["_id"]}
+            workoutData={displayWorkout}
           />
         ) : (
           <h2>Error</h2>
