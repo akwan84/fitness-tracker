@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInfo, setShowAddWorkoutForm, setWorkoutData, update, id, workoutData }) => {
+const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInfo, setShowAddWorkoutForm, setShowUpdateWorkoutForm, setWorkoutData, update, id, workoutData }) => {
     const [name, setName] = useState(workoutData ? workoutData.name : '');
     const [date, setDate] = useState(workoutData ? `${workoutData.date.substring(0, 4)}-${workoutData.date.substring(5, 7)}-${workoutData.date.substring(8,10)}` : '');
     const [exercises, setExercises] = useState(workoutData ? workoutData.exercises : []);
@@ -66,9 +66,10 @@ const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInf
             await makeRequest(`workout/${id}`, 'PUT', token, reqBody);
         }
 
-        setShowWorkoutInfo(false);
         setShowWorkouts(true);
+        setShowWorkoutInfo(false);
         setShowAddWorkoutForm(false);
+        setShowUpdateWorkoutForm(false);
 
         const workouts = await makeRequest('workout', 'GET', token, null);
         setWorkoutData(workouts);
@@ -78,6 +79,13 @@ const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInf
         const values = [...exercises];
         values.splice(index, 1);
         setExercises(values);
+    }
+
+    const cancelAdd = () => {
+        setShowWorkouts(true);
+        setShowWorkoutInfo(false);
+        setShowAddWorkoutForm(false);
+        setShowUpdateWorkoutForm(false);
     }
 
     return (
@@ -131,7 +139,7 @@ const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInf
             <button onClick={addExercise}>Add Exercise</button>
             {!update && <button onClick={handleSubmit}>Submit</button>}
             {update && <button onClick={handleSubmit}>Update</button>}
-            {/* TODO: Add a cancellation button */}
+            <button onClick={cancelAdd}>Cancel</button>
         </div>
     );
 }

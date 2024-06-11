@@ -15,10 +15,13 @@ function App() {
   const [token, setToken] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [workoutData, setWorkoutData] = useState(null);
+
+  //pages to show
   const [showWorkouts, setShowWorkouts] = useState(true);
   const [showWorkoutInfo, setShowWorkoutInfo] = useState(false);
   const [showAddWorkoutForm, setShowAddWorkoutForm] = useState(false);
   const [showUpdateWorkoutForm, setShowUpdateWorkoutForm] = useState(false);
+
   const [displayWorkout, setDisplayWorkout] = useState({});
   const [curPage, setCurPage] = useState(1);
 
@@ -256,6 +259,7 @@ function App() {
             setShowWorkouts={setShowWorkouts}
             setShowWorkoutInfo={setShowWorkoutInfo}
             setShowAddWorkoutForm={setShowAddWorkoutForm}
+            setShowUpdateWorkoutForm={setShowUpdateWorkoutForm}
             setWorkoutData={setWorkoutData}
             update={false}
             id={null}
@@ -268,6 +272,7 @@ function App() {
             setShowWorkouts={setShowWorkouts}
             setShowWorkoutInfo={setShowWorkoutInfo}
             setShowAddWorkoutForm={setShowAddWorkoutForm}
+            setShowUpdateWorkoutForm={setShowUpdateWorkoutForm}
             setWorkoutData={setWorkoutData}
             update={true}
             id={displayWorkout["_id"]}
