@@ -4,6 +4,7 @@ const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInf
     const [name, setName] = useState(workoutData ? workoutData.name : '');
     const [date, setDate] = useState(workoutData ? `${workoutData.date.substring(0, 4)}-${workoutData.date.substring(5, 7)}-${workoutData.date.substring(8,10)}` : '');
     const [exercises, setExercises] = useState(workoutData ? workoutData.exercises : []);
+    const [newExercise, setNewExercise] = useState('');
     
     const addExercise = () => {
         const newExercise = {
@@ -75,6 +76,22 @@ const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInf
         setWorkoutData(workouts);
     }
 
+    const createExercise = async() => {
+        if(newExercise === '') {
+            alert("Exercises must have a name");
+            return;
+        }
+
+        const reqBody = {
+            "exercise" : newExercise
+        };
+
+        await makeRequest('exercise', 'POST', token, reqBody);
+
+        alert(`Exercise ${newExercise} created`);
+        setNewExercise('');
+    }
+
     const removeExercise = (index) => {
         const values = [...exercises];
         values.splice(index, 1);
@@ -90,6 +107,18 @@ const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInf
 
     return (
         <div>
+            <h3>Create New Exercise</h3>
+            <input
+                type="text"
+                name="newExercise"
+                placeholder="Exercise Name"
+                value={newExercise}
+                onChange={e => setNewExercise(e.target.value)}
+            />
+            <button onClick={createExercise}>Create</button>
+            <br />
+            <br />
+            <h3>New Workout</h3>
             <input
                 type="text"
                 name="name"
@@ -136,6 +165,7 @@ const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInf
                     <button onClick={() => addSet(index1)}>Add Set</button>
                 </div>
             ))}
+            <br/>
             <button onClick={addExercise}>Add Exercise</button>
             {!update && <button onClick={handleSubmit}>Submit</button>}
             {update && <button onClick={handleSubmit}>Update</button>}
