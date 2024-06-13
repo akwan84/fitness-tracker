@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInfo, setShowAddWorkoutForm, setShowUpdateWorkoutForm, setWorkoutData, update, id, workoutData }) => {
+const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInfo, setShowAddWorkoutForm, setShowUpdateWorkoutForm, setWorkoutData, update, id, workoutData, userExercises, setUserExercises }) => {
     const [name, setName] = useState(workoutData ? workoutData.name : '');
     const [date, setDate] = useState(workoutData ? `${workoutData.date.substring(0, 4)}-${workoutData.date.substring(5, 7)}-${workoutData.date.substring(8,10)}` : '');
     const [exercises, setExercises] = useState(workoutData ? workoutData.exercises : []);
@@ -90,6 +90,10 @@ const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInf
 
         alert(`Exercise ${newExercise} created`);
         setNewExercise('');
+
+        const exercises = await makeRequest('exercise', 'GET', token, null);
+        setUserExercises(exercises.exercises);
+        console.log(exercises);
     }
 
     const removeExercise = (index) => {
@@ -134,13 +138,18 @@ const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInf
             />
             {exercises.map((exercise, index1) => (
                 <div>
-                    <input
-                        type="text"
+                    <select
                         name="exercise"
-                        placeholder="Exercise"
                         value={exercise.exercise}
                         onChange={e => handleExerciseChange(index1, e)}
-                    />
+                    >
+                        <option value="" disabled>Select Exercise</option>
+                        {userExercises.map((exerciseOption, index) => (
+                            <option key={index} value={exerciseOption}>
+                                {exerciseOption}
+                            </option>
+                        ))}
+                    </select>
                     <button onClick={() => removeExercise(index1)}>Remove Exercise</button>
                     {exercise.setInfo.map((set, index2) => (
                         <div>

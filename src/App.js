@@ -9,12 +9,15 @@ function App() {
   // State to store user input
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
   const [regUsername, setRegUsername] = useState('');
   const [regPassword, setRegPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [token, setToken] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const [workoutData, setWorkoutData] = useState(null);
+  const [userExercises, setUserExercises] = useState([]);
 
   //pages to show
   const [showWorkouts, setShowWorkouts] = useState(true);
@@ -53,6 +56,9 @@ function App() {
       const workouts = await makeRequest(`workout?pageSize=${PAGE_SIZE}&page=1`, 'GET', data["accessToken"], null);
       setWorkoutData(workouts);
 
+      const exercises = await makeRequest('exercise', 'GET', data["accessToken"], null);
+      setUserExercises(exercises.exercises);
+
     } catch(err) {
       console.log(err.message);
     }
@@ -85,6 +91,9 @@ function App() {
 
       const workouts = await makeRequest(`workout?pageSize=${PAGE_SIZE}&page=1`, 'GET', data["accessToken"], null);
       setWorkoutData(workouts);
+
+      const exercises = await makeRequest('exercise', 'GET', data["accessToken"], null);
+      setUserExercises(exercises.exercises);
 
     } catch(err) {
       console.log(err.message);
@@ -264,6 +273,8 @@ function App() {
             update={false}
             id={null}
             workoutData={null}
+            userExercises={userExercises}
+            setUserExercises={setUserExercises}
           />
         ) : showUpdateWorkoutForm ? (
           <AddWorkoutForm
@@ -277,6 +288,8 @@ function App() {
             update={true}
             id={displayWorkout["_id"]}
             workoutData={displayWorkout}
+            userExercises={userExercises}
+            setUserExercises={setUserExercises}
           />
         ) : (
           <h2>Error</h2>
