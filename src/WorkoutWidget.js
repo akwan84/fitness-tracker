@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const WorkoutWidget = ({ makeRequest, token, workout, setDisplayWorkout, setShowWorkouts, setShowWorkoutInfo, setWorkoutData }) => {
+const WorkoutWidget = ({ makeRequest, token, workout, setDisplayWorkout, setShowWorkouts, setShowWorkoutInfo, setWorkoutData, handleWorkoutsRefresh }) => {
     const [showConfirm, setShowConfirm] = useState(false);
 
     const showWorkoutInfo = () => {
@@ -10,9 +10,13 @@ const WorkoutWidget = ({ makeRequest, token, workout, setDisplayWorkout, setShow
     }
 
     const deleteWorkout = async() => {
-        await makeRequest(`workout/${workout["_id"]}`, 'DELETE', token, null);
+        const response = await makeRequest(`workout/${workout["_id"]}`, 'DELETE', token, null);
+        if(response.status !== 200) {
+            alert(`Error deleting workout, error code ${response.status}`);
+            return;
+        }
 
-        const workouts = await makeRequest('workout', 'GET', token, null);
+        const workouts = await handleWorkoutsRefresh(token);
         setWorkoutData(workouts);
         setShowConfirm(false);
     }

@@ -1,11 +1,12 @@
 import { useState } from "react";
 
-const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInfo, setShowAddWorkoutForm, setShowUpdateWorkoutForm, setWorkoutData, update, id, workoutData, userExercises, setUserExercises }) => {
+const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInfo, setShowAddWorkoutForm, setShowUpdateWorkoutForm, setWorkoutData, update, id, workoutData, userExercises, setUserExercises, handleWorkoutsRefresh }) => {
     const [name, setName] = useState(workoutData ? workoutData.name : '');
     const [date, setDate] = useState(workoutData ? `${workoutData.date.substring(0, 4)}-${workoutData.date.substring(5, 7)}-${workoutData.date.substring(8,10)}` : '');
     const [exercises, setExercises] = useState(workoutData ? workoutData.exercises : []);
     const [newExercise, setNewExercise] = useState('');
     
+    //Add an exercise to the form
     const addExercise = () => {
         const newExercise = {
             'exercise' : '',
@@ -20,31 +21,49 @@ const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInf
         setExercises([...exercises, newExercise])
     }
 
+    //Add a set to an exercise in the form
     const addSet = (index) => {
         const values = [...exercises];
         values[index]["setInfo"].push({ 'weight' : '', 'reps' : ''});
         setExercises(values);
     }
 
+    //Update the state of a set when info changes
     const handleSetInfoChange = (index1, index2, e) => {
         const values = [...exercises];
         values[index1]["setInfo"][index2][e.target.name] = e.target.value;
         setExercises(values);
     }
 
+    //Update the state of an exercise when info changes
     const handleExerciseChange = (index, e) => {
         const values = [...exercises];
         values[index]["exercise"] = e.target.value;
         setExercises(values);
     }
 
+    //Remove a set from an exercise in the form
     const removeSet = (index1, index2) => {
         const values = [...exercises];
         values[index1]["setInfo"].splice(index2, 1);
         setExercises(values);
     }
 
+    //Remove an exercise from the form
+    const removeExercise = (index) => {
+        const values = [...exercises];
+        values.splice(index, 1);
+        setExercises(values);
+    }
+
+    //Submit the form
     const handleSubmit = async() => {
+        //create initial request body with the workout name and date
+        if(!name || !date) {
+            alert('Name and date are required');
+            return;
+        }
+
         const reqBody = {
             "name" : name,
             "date" : date,
@@ -53,6 +72,29 @@ const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInf
         const exerciseList = [];
 
         for(let i = 0; i < exercises.length; i++) {
+            //make sure an exercise is selected
+            if(!exercises[i]["exercise"]) {
+                alert("All exercises must be selected");
+                return;
+            }
+            //make sure there are more than 0 sets
+            if(exercises[i]["setInfo"].length === 0) {
+                alert(`Exercise ${exercises[i]["exercise"]} can not have 0 sets`);
+                return;
+            }
+
+            for(let j = 0; j < exercises[i]["setInfo"].length; j++) {
+                //make sure weight and rep info is all filled in
+                if(!exercises[i]["setInfo"][j]["weight"] || !exercises[i]["setInfo"][j]["reps"]) {
+                    alert("Weight and reps must be filled in");
+                    return;
+                }
+                //check if all weight and reps are numbers
+                if(isNaN(exercises[i]["setInfo"][j]["weight"]) || isNaN(exercises[i]["setInfo"][j]["reps"])) {
+                    alert("All weight and reps must be numbers");
+                    return;
+                }
+            }
             exerciseList.push({
                 "exercise" : exercises[i]["exercise"],
                 "sets" : exercises[i]["setInfo"].length,
@@ -62,9 +104,15 @@ const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInf
         reqBody["exercises"] = exerciseList;
 
         if(!update) {
-            await makeRequest('workout', 'POST', token, reqBody);
+            const postResponse = await makeRequest('workout', 'POST', token, reqBody);
+            if(postResponse.status !== 201) {
+                alert(`Error adding new workout, error code ${postResponse.status}`);
+            }
         } else {
-            await makeRequest(`workout/${id}`, 'PUT', token, reqBody);
+            const putResponse = await makeRequest(`workout/${id}`, 'PUT', token, reqBody);
+            if(putResponse.status !== 201) {
+                alert(`Error updating workout, error code ${putResponse.status}`);
+            }
         }
 
         setShowWorkouts(true);
@@ -72,11 +120,13 @@ const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInf
         setShowAddWorkoutForm(false);
         setShowUpdateWorkoutForm(false);
 
-        const workouts = await makeRequest('workout', 'GET', token, null);
-        setWorkoutData(workouts);
+        const updatedWorkouts = await handleWorkoutsRefresh(token);
+        setWorkoutData(updatedWorkouts);
     }
 
+    //Create a new exercise
     const createExercise = async() => {
+        //make sure the exercise name is filled in
         if(newExercise === '') {
             alert("Exercises must have a name");
             return;
@@ -86,20 +136,34 @@ const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInf
             "exercise" : newExercise
         };
 
-        await makeRequest('exercise', 'POST', token, reqBody);
+        const res = await makeRequest('exercise', 'POST', token, reqBody);
+        
+        //handle errors
+        if(res.status === 403){
+            alert("Forbidden")
+            return;
+        }
+
+        if(res.status === 409){
+            alert(`${newExercise} already exists`);
+            return;
+        }
+
+        if(res.status !== 201){
+            alert(res.message);
+            return;
+        }
 
         alert(`Exercise ${newExercise} created`);
         setNewExercise('');
 
-        const exercises = await makeRequest('exercise', 'GET', token, null);
-        setUserExercises(exercises.exercises);
-        console.log(exercises);
-    }
-
-    const removeExercise = (index) => {
-        const values = [...exercises];
-        values.splice(index, 1);
-        setExercises(values);
+        //get the updated exercise list
+        const exercisesResponse = await makeRequest('exercise', 'GET', token, null);
+        if(exercisesResponse.status !== 200) {
+            alert(exercisesResponse.message);
+            return;
+        }
+        setUserExercises(exercisesResponse.exercises);
     }
 
     const cancelAdd = () => {
