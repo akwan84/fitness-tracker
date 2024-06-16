@@ -1,15 +1,9 @@
 import ExerciseWidget from "./ExerciseWidget";
 
-const WorkoutInfo = ({ workout, setDisplayWorkout, setShowWorkouts, setShowWorkoutInfo, setShowUpdateWorkoutForm }) => {
+const WorkoutInfo = ({ workout, setDisplayWorkout, switchToWorkoutsPage, switchToUpdateWorkoutPage }) => {
     const goBack = () => {
         setDisplayWorkout(null);
-        setShowWorkouts(true);
-        setShowWorkoutInfo(false);
-    }
-
-    const updateWorkout = () => {
-        setShowUpdateWorkoutForm(true);
-        setShowWorkoutInfo(false);
+        switchToWorkoutsPage();
     }
 
     const date = new Date(workout.date);
@@ -21,7 +15,7 @@ const WorkoutInfo = ({ workout, setDisplayWorkout, setShowWorkouts, setShowWorko
                 <ExerciseWidget exercise={exercise} workout={workout}/>
             ))}
             <button onClick={goBack}>Back</button>
-            <button onClick={updateWorkout}>Update</button>
+            <button onClick={switchToUpdateWorkoutPage}>Update</button>
         </div>
     );
 }

@@ -290,6 +290,27 @@ function App() {
     }
   }
 
+  const switchToWorkoutsPage = () => {
+    setShowWorkouts(true);
+    setShowWorkoutInfo(false);
+    setShowAddWorkoutForm(false);
+    setShowUpdateWorkoutForm(false);
+  }
+
+  const switchToUpdateWorkoutPage = () => {
+    setShowWorkouts(false);
+    setShowWorkoutInfo(false);
+    setShowAddWorkoutForm(false);
+    setShowUpdateWorkoutForm(true);
+  }
+
+  const switchToWorkoutInfo = () => {
+    setShowWorkouts(false);
+    setShowWorkoutInfo(true);
+    setShowAddWorkoutForm(false);
+    setShowUpdateWorkoutForm(false);
+  }
+
   return (
     <div>
       {isLoggedIn ? (
@@ -302,10 +323,9 @@ function App() {
               token={token}
               workoutData={workoutData} 
               setDisplayWorkout={setDisplayWorkout} 
-              setShowWorkouts={setShowWorkouts} 
-              setShowWorkoutInfo={setShowWorkoutInfo}
               setWorkoutData={setWorkoutData}
               handleWorkoutsRefresh={handleWorkoutsRefresh}
+              switchToWorkoutInfo={switchToWorkoutInfo}
             />
             <button onClick={handleLogout}>Logout</button>
             <br/>
@@ -317,18 +337,13 @@ function App() {
           <WorkoutInfo 
             workout={displayWorkout}  
             setDisplayWorkout={setDisplayWorkout} 
-            setShowWorkouts={setShowWorkouts} 
-            setShowWorkoutInfo={setShowWorkoutInfo}
-            setShowUpdateWorkoutForm={setShowUpdateWorkoutForm}
+            switchToWorkoutsPage={switchToWorkoutsPage}
+            switchToUpdateWorkoutPage={switchToUpdateWorkoutPage}
           />
         ) : showAddWorkoutForm ? (
           <AddWorkoutForm
             makeRequest={makeRequest}
             token={token}
-            setShowWorkouts={setShowWorkouts}
-            setShowWorkoutInfo={setShowWorkoutInfo}
-            setShowAddWorkoutForm={setShowAddWorkoutForm}
-            setShowUpdateWorkoutForm={setShowUpdateWorkoutForm}
             setWorkoutData={setWorkoutData}
             update={false}
             id={null}
@@ -336,15 +351,12 @@ function App() {
             userExercises={userExercises}
             setUserExercises={setUserExercises}
             handleWorkoutsRefresh={handleWorkoutsRefresh}
+            switchToWorkoutsPage={switchToWorkoutsPage}
           />
         ) : showUpdateWorkoutForm ? (
           <AddWorkoutForm
             makeRequest={makeRequest}
             token={token}
-            setShowWorkouts={setShowWorkouts}
-            setShowWorkoutInfo={setShowWorkoutInfo}
-            setShowAddWorkoutForm={setShowAddWorkoutForm}
-            setShowUpdateWorkoutForm={setShowUpdateWorkoutForm}
             setWorkoutData={setWorkoutData}
             update={true}
             id={displayWorkout["_id"]}
@@ -352,6 +364,7 @@ function App() {
             userExercises={userExercises}
             setUserExercises={setUserExercises}
             handleWorkoutsRefresh={handleWorkoutsRefresh}
+            switchToWorkoutsPage={switchToWorkoutsPage}
           />
         ) : (
           <h2>Error</h2>

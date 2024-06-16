@@ -1,6 +1,6 @@
 import WorkoutWidget from "./WorkoutWidget";
 
-const WorkoutDisplay = ({ makeRequest, token, workoutData, setDisplayWorkout, setShowWorkouts, setShowWorkoutInfo, setWorkoutData, handleWorkoutsRefresh }) => {
+const WorkoutDisplay = ({ makeRequest, token, workoutData, setDisplayWorkout, setShowWorkouts, setShowWorkoutInfo, setWorkoutData, handleWorkoutsRefresh, switchToWorkoutInfo }) => {
     return (
         <div>
             {!workoutData && <h2>No Workouts To Show</h2>}
@@ -10,10 +10,9 @@ const WorkoutDisplay = ({ makeRequest, token, workoutData, setDisplayWorkout, se
                     token={token}
                     workout={workout} 
                     setDisplayWorkout={setDisplayWorkout} 
-                    setShowWorkouts={setShowWorkouts} 
-                    setShowWorkoutInfo={setShowWorkoutInfo}
                     setWorkoutData={setWorkoutData}
                     handleWorkoutsRefresh={handleWorkoutsRefresh}
+                    switchToWorkoutInfo={switchToWorkoutInfo}
                 />
             ))}
         </div>

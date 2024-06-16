@@ -1,11 +1,10 @@
 import { useState } from "react";
 
-const WorkoutWidget = ({ makeRequest, token, workout, setDisplayWorkout, setShowWorkouts, setShowWorkoutInfo, setWorkoutData, handleWorkoutsRefresh }) => {
+const WorkoutWidget = ({ makeRequest, token, workout, setDisplayWorkout, setWorkoutData, handleWorkoutsRefresh, switchToWorkoutInfo }) => {
     const [showConfirm, setShowConfirm] = useState(false);
 
     const showWorkoutInfo = () => {
-        setShowWorkouts(false);
-        setShowWorkoutInfo(true);
+        switchToWorkoutInfo();
         setDisplayWorkout(workout);
     }
 

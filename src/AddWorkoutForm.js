@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInfo, setShowAddWorkoutForm, setShowUpdateWorkoutForm, setWorkoutData, update, id, workoutData, userExercises, setUserExercises, handleWorkoutsRefresh }) => {
+const AddWorkoutForm = ({ makeRequest, token, setWorkoutData, update, id, workoutData, userExercises, setUserExercises, handleWorkoutsRefresh, switchToWorkoutsPage }) => {
     const [name, setName] = useState(workoutData ? workoutData.name : '');
     const [date, setDate] = useState(workoutData ? `${workoutData.date.substring(0, 4)}-${workoutData.date.substring(5, 7)}-${workoutData.date.substring(8,10)}` : '');
     const [exercises, setExercises] = useState(workoutData ? workoutData.exercises : []);
@@ -115,10 +115,7 @@ const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInf
             }
         }
 
-        setShowWorkouts(true);
-        setShowWorkoutInfo(false);
-        setShowAddWorkoutForm(false);
-        setShowUpdateWorkoutForm(false);
+        switchToWorkoutsPage();
 
         const updatedWorkouts = await handleWorkoutsRefresh(token);
         setWorkoutData(updatedWorkouts);
@@ -164,13 +161,6 @@ const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInf
             return;
         }
         setUserExercises(exercisesResponse.exercises);
-    }
-
-    const cancelAdd = () => {
-        setShowWorkouts(true);
-        setShowWorkoutInfo(false);
-        setShowAddWorkoutForm(false);
-        setShowUpdateWorkoutForm(false);
     }
 
     return (
@@ -242,7 +232,7 @@ const AddWorkoutForm = ({ makeRequest, token, setShowWorkouts, setShowWorkoutInf
             <button onClick={addExercise}>Add Exercise</button>
             {!update && <button onClick={handleSubmit}>Submit</button>}
             {update && <button onClick={handleSubmit}>Update</button>}
-            <button onClick={cancelAdd}>Cancel</button>
+            <button onClick={switchToWorkoutsPage}>Cancel</button>
         </div>
     );
 }
