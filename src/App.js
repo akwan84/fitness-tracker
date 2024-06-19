@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import WorkoutDisplay from './WorkoutDisplay';
 import WorkoutInfo from './WorkoutInfo';
 import AddWorkoutForm from './AddWorkoutForm';
+import ExerciseHistory from './ExerciseHistory';
 
 function App() {
   const PAGE_SIZE = 5;
@@ -31,6 +32,7 @@ function App() {
   const [showWorkoutInfo, setShowWorkoutInfo] = useState(false);
   const [showAddWorkoutForm, setShowAddWorkoutForm] = useState(false);
   const [showUpdateWorkoutForm, setShowUpdateWorkoutForm] = useState(false);
+  const [showExerciseHistoryPage, setShowExerciseHistoryPage] = useState(false);
 
   const handleWorkoutsRefresh = async(token) => {
     const res = await makeRequest(`workout?pageSize=${PAGE_SIZE}&page=1`, 'GET', token, null);
@@ -175,12 +177,12 @@ function App() {
       }
 
       const data = await response.json();
-      console.log(data);
       return {
         "status" : response.status,
         "data" : data
       };
     } catch(err) {
+      console.log(err.message);
       return {
         "status" : response.status,
         "message" : err.message
@@ -193,6 +195,7 @@ function App() {
     setShowWorkouts(false);
     setShowUpdateWorkoutForm(false);
     setShowAddWorkoutForm(true);
+    setShowExerciseHistoryPage(false);
   }
 
   //if the refresh token is still valid, keep the user logged in and provide a new access token
@@ -295,6 +298,7 @@ function App() {
     setShowWorkoutInfo(false);
     setShowAddWorkoutForm(false);
     setShowUpdateWorkoutForm(false);
+    setShowExerciseHistoryPage(false);
   }
 
   const switchToUpdateWorkoutPage = () => {
@@ -302,6 +306,7 @@ function App() {
     setShowWorkoutInfo(false);
     setShowAddWorkoutForm(false);
     setShowUpdateWorkoutForm(true);
+    setShowExerciseHistoryPage(false);
   }
 
   const switchToWorkoutInfo = () => {
@@ -309,6 +314,15 @@ function App() {
     setShowWorkoutInfo(true);
     setShowAddWorkoutForm(false);
     setShowUpdateWorkoutForm(false);
+    setShowExerciseHistoryPage(false);
+  }
+
+  const switchToExerciseHistoryPage = () => {
+    setShowWorkouts(false);
+    setShowWorkoutInfo(false);
+    setShowAddWorkoutForm(false);
+    setShowUpdateWorkoutForm(false);
+    setShowExerciseHistoryPage(true);
   }
 
   return (
@@ -318,6 +332,7 @@ function App() {
           <div>
             <h2>Welcome!</h2>
             <button onClick={switchToAddWorkout}>Add Workout</button>
+            <button onClick={switchToExerciseHistoryPage}>Exercise History</button>
             <WorkoutDisplay 
               makeRequest={makeRequest}
               token={token}
@@ -365,6 +380,13 @@ function App() {
             setUserExercises={setUserExercises}
             handleWorkoutsRefresh={handleWorkoutsRefresh}
             switchToWorkoutsPage={switchToWorkoutsPage}
+          />
+        ) : showExerciseHistoryPage ? (
+          <ExerciseHistory
+            switchToWorkoutsPage={switchToWorkoutsPage}
+            userExercises={userExercises}
+            token={token}
+            makeRequest={makeRequest}
           />
         ) : (
           <h2>Error</h2>

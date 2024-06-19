@@ -236,8 +236,9 @@ const getHistory = async(req, res) => {
         const user = req.user;
 
         //get the exercise to search for
-        const { exercise } = req.body;
+        const exercise  = req.query.exercise;
         if(!exercise) return res.status(400).json({ "message" : "exercise is required" });
+        
 
         //get the page and page size
         const page = parseInt(req.query.page || 1);
