@@ -1,23 +1,71 @@
 import { useState } from "react";
 
 const ExerciseHistory = ({ switchToWorkoutsPage, userExercises, token, makeRequest }) => {
+    const PAGE_SIZE = 2;
     const [selectedExercise, setSelectedExercise] = useState('');
     const [exerciseData, setExerciseData] = useState([]);
+    const [pageNum, setPageNum] = useState(1);
 
     const getHistory = async() => {
-        if(!selectedExercise) {
-            alert("Exercise must be selected");
-            return;
-        }
+        try {
+            if(!selectedExercise) {
+                alert("Exercise must be selected");
+                return;
+            }
 
-        const parsedExercise = selectedExercise.replace(/ /g, "%20");
+            const parsedExercise = selectedExercise.replace(/ /g, "%20");
 
-        const response = await makeRequest(`exercise/history?exercise=${parsedExercise}`, 'GET', token, null); 
-        if(response.status !== 200) {
-            alert(`Error getting history for ${selectedExercise}, status ${response.status}`);
-            return;
+            const response = await makeRequest(`exercise/history?exercise=${parsedExercise}&page=1&pageSize=${PAGE_SIZE}`, 'GET', token, null); 
+            if(response.status !== 200) {
+                alert(`Error getting history for ${selectedExercise}, status ${response.status}`);
+                return;
+            }
+            setExerciseData(response.data.data);
+            setPageNum(1);
+        } catch (err) {
+            alert(err.message);
         }
-        setExerciseData(response.data.data);
+    }
+
+    const getNextPage = async() => {
+        try {
+            if(!selectedExercise) return;
+
+            const parsedExercise = selectedExercise.replace(/ /g, "%20");
+
+            const response = await makeRequest(`exercise/history?exercise=${parsedExercise}&page=${pageNum + 1}&pageSize=${PAGE_SIZE}`, 'GET', token, null); 
+            if(response.status !== 200) {
+                alert(`Error getting history for ${selectedExercise}, status ${response.status}`);
+                return;
+            }
+
+            if(response.data.data.length > 0) {
+                setExerciseData(response.data.data);
+                setPageNum(pageNum + 1);
+            }
+        } catch (err) {
+            alert(err.message);
+        }
+    }
+
+    const getPrevPage = async() => {
+        try {
+            if(!selectedExercise) return;
+
+            const parsedExercise = selectedExercise.replace(/ /g, "%20");
+
+            if(pageNum > 1) {
+                const response = await makeRequest(`exercise/history?exercise=${parsedExercise}&page=${pageNum - 1}&pageSize=${PAGE_SIZE}`, 'GET', token, null); 
+                if(response.status !== 200) {
+                    alert(`Error getting history for ${selectedExercise}, status ${response.status}`);
+                    return;
+                }
+                setExerciseData(response.data.data);
+                setPageNum(pageNum - 1);
+            }
+        } catch (err) {
+            alert(err.message);
+        }
     }
 
     const parseDate = (date) => {
@@ -39,7 +87,7 @@ const ExerciseHistory = ({ switchToWorkoutsPage, userExercises, token, makeReque
                 ))}
             </select>
             <button onClick={getHistory}>Select</button>
-            {exerciseData.map(day => (
+            {exerciseData.length > 0 && exerciseData.map(day => (
                 <div>
                     <h3>{parseDate(new Date(day.date))}</h3>
                     {day.setInfo.map((set, index) => (
@@ -49,6 +97,12 @@ const ExerciseHistory = ({ switchToWorkoutsPage, userExercises, token, makeReque
                     ))}
                 </div>
             ))}
+            {exerciseData.length === 0 && <h2>No History To Show</h2>}
+            <button onClick={getPrevPage}>Previous</button>
+            <button onClick={getNextPage}>Next</button>
+            <br/>
+            <p>Page: {pageNum}</p>
+            <br/>
             <button onClick={switchToWorkoutsPage}>Back</button>
         </div>
     );
