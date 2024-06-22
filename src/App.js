@@ -329,7 +329,7 @@ function App() {
     <div>
       {isLoggedIn ? (
         showWorkouts ? (
-          <div>
+          <div className="appPage">
             <h2>Welcome!</h2>
             <button onClick={switchToAddWorkout}>Add Workout</button>
             <button onClick={switchToExerciseHistoryPage}>Exercise History</button>
@@ -392,9 +392,11 @@ function App() {
           <h2>Error</h2>
         )
       ) : (
-        <div>
-          <h2>Login</h2>
+        <div className="loginPage">
+          <br />
+          <h2 className="loginHeader">Login</h2>
           <input
+            className="loginInput"
             type="text"
             placeholder="Username"
             value={username}
@@ -402,15 +404,19 @@ function App() {
           />
           <br />
           <input
+            className="loginInput"
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
           <br />
-          <button onClick={handleLogin}>Login</button>
-          <h2>Sign Up</h2>
+          <button className="loginButton" onClick={handleLogin}>Login</button>
+          <br />
+          <br />
+          <h2 className="loginHeader">Sign Up</h2>
           <input
+            className="loginInput"
             type="text"
             placeholder="Username"
             value={regUsername}
@@ -418,6 +424,7 @@ function App() {
           />
           <br />
           <input
+            className="loginInput"
             type="password"
             placeholder="Password"
             value={regPassword}
@@ -425,13 +432,14 @@ function App() {
           />
           <br />
           <input
+            className="loginInput"
             type="password"
             placeholder="Confirm Password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
           <br />
-          <button onClick={handleRegister}>Sign Up</button>
+          <button className="loginButton" onClick={handleRegister}>Sign Up</button>
         </div>
       )}
     </div>
