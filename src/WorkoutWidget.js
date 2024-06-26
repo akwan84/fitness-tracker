@@ -20,15 +20,16 @@ const WorkoutWidget = ({ makeRequest, token, workout, setDisplayWorkout, setWork
         setShowConfirm(false);
     }
 
+    const date = new Date(workout.date);
     return (
-        <div>
-            <div onClick={showWorkoutInfo}>
-                <h3>{workout.name}</h3>
-                <p>{workout.date}</p>
+        <div className="workoutWidget">
+            <div onClick={showWorkoutInfo} className="workoutWidgetContent">
+                <h3 style={{marginLeft:"3%",paddingTop:"1vh",fontSize:"2vh"}}>{workout.name}</h3>
+                <p style={{marginLeft:"3%", fontSize:"1.5vh"}}>{`${date.getDate()}/${date.getMonth() < 10 ? '0' : ''}${date.getMonth() + 1}/${date.getFullYear()}`}</p>
             </div>
-            {!showConfirm && <button onClick={() => setShowConfirm(!showConfirm)}>Delete</button>}
-            {showConfirm && <button onClick={() => setShowConfirm(!showConfirm)}>Cancel</button>}
-            {showConfirm && <button onClick={deleteWorkout}>Confirm</button>}
+            {!showConfirm && <button className="workoutWidgetButton" onClick={() => setShowConfirm(!showConfirm)}>Delete</button>}
+            {showConfirm && <button className="workoutWidgetButton" onClick={() => setShowConfirm(!showConfirm)}>Cancel</button>}
+            {showConfirm && <button className="workoutWidgetButton" onClick={deleteWorkout}>Confirm</button>}
         </div>
     );
 }

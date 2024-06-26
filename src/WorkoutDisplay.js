@@ -2,7 +2,7 @@ import WorkoutWidget from "./WorkoutWidget";
 
 const WorkoutDisplay = ({ makeRequest, token, workoutData, setDisplayWorkout, setShowWorkouts, setShowWorkoutInfo, setWorkoutData, handleWorkoutsRefresh, switchToWorkoutInfo }) => {
     return (
-        <div>
+        <div style={{height:"78vh"}}>
             {!workoutData && <h2>No Workouts To Show</h2>}
             {workoutData && workoutData.workouts.map(workout => (
                 <WorkoutWidget 

@@ -330,9 +330,12 @@ function App() {
       {isLoggedIn ? (
         showWorkouts ? (
           <div className="appPage">
-            <h2>Welcome!</h2>
-            <button onClick={switchToAddWorkout}>Add Workout</button>
-            <button onClick={switchToExerciseHistoryPage}>Exercise History</button>
+            <div className='header'>
+              <h2 className='headerText'>Fitness Tracker</h2>
+              <button onClick={switchToAddWorkout} className="workoutDisplayButton">Add Workout</button>
+              <button onClick={switchToExerciseHistoryPage} className="workoutDisplayButton" style={{marginLeft:"0px"}}>Exercise History</button>
+              <button onClick={handleLogout} className="workoutDisplayButton">Logout</button>
+            </div>
             <WorkoutDisplay 
               makeRequest={makeRequest}
               token={token}
@@ -342,11 +345,10 @@ function App() {
               handleWorkoutsRefresh={handleWorkoutsRefresh}
               switchToWorkoutInfo={switchToWorkoutInfo}
             />
-            <button onClick={handleLogout}>Logout</button>
             <br/>
-            <button onClick={getPrevPage}>Previous</button>
-            <button onClick={getNextPage}>Next</button>
-            <p>Page: {curPage}</p>
+            <button className="pageToggleButton" onClick={getPrevPage} style={{marginLeft:"35%"}}>Previous</button>
+            <div id="pageToggleNum"><p>{curPage}</p></div>
+            <button className="pageToggleButton" onClick={getNextPage}>Next</button>
           </div>
         ) : showWorkoutInfo ? (
           <WorkoutInfo 
