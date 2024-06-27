@@ -332,9 +332,9 @@ function App() {
           <div className="appPage">
             <div className='header'>
               <h2 className='headerText'>Fitness Tracker</h2>
-              <button onClick={switchToAddWorkout} className="workoutDisplayButton">Add Workout</button>
-              <button onClick={switchToExerciseHistoryPage} className="workoutDisplayButton" style={{marginLeft:"0px"}}>Exercise History</button>
-              <button onClick={handleLogout} className="workoutDisplayButton">Logout</button>
+              <button onClick={switchToAddWorkout} className="headerButton">Add Workout</button>
+              <button onClick={switchToExerciseHistoryPage} className="headerButton" style={{marginLeft:"0px"}}>Exercise History</button>
+              <button onClick={handleLogout} className="headerButton">Logout</button>
             </div>
             <WorkoutDisplay 
               makeRequest={makeRequest}

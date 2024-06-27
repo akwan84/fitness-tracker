@@ -164,38 +164,50 @@ const AddWorkoutForm = ({ makeRequest, token, setWorkoutData, update, id, workou
     }
 
     return (
-        <div>
-            <h3>Create New Exercise</h3>
+        <div className="addWorkoutPage">
+            <div className='header'>
+              <h2 className='headerText'>Fitness Tracker</h2>
+              <button onClick={switchToWorkoutsPage} className="headerButton" style={{marginLeft:"30%"}}>Cancel</button>
+            </div>
+            <h2 className="addWorkoutHeader">Create New Exercise</h2>
             <input
                 type="text"
                 name="newExercise"
                 placeholder="Exercise Name"
                 value={newExercise}
                 onChange={e => setNewExercise(e.target.value)}
+                className="addWorkoutInput"
             />
-            <button onClick={createExercise}>Create</button>
+            <br/>
+            <button className="addWorkoutButton" onClick={createExercise} style={{marginLeft:"5%", marginTop:"1vh"}}>Create</button>
             <br />
             <br />
-            <h3>New Workout</h3>
+            <h2 className="addWorkoutHeader">New Workout</h2>
             <input
                 type="text"
                 name="name"
                 placeholder="Workout Name"
                 value={name}
                 onChange={e => setName(e.target.value)}
+                className="addWorkoutInput"
             />
             <input
                 type="date"
                 name="date"
                 value={date}
                 onChange={e => setDate(e.target.value)}
+                className="addWorkoutInput"
+                style={{marginLeft:"1%"}}
             />
             {exercises.map((exercise, index1) => (
                 <div>
+                    <h3 className="addWorkoutExerciseHeader">Exercise {index1 + 1}</h3>
                     <select
                         name="exercise"
                         value={exercise.exercise}
                         onChange={e => handleExerciseChange(index1, e)}
+                        className="addWorkoutInput"
+                        style={{height:"3vh"}}
                     >
                         <option value="" disabled>Select Exercise</option>
                         {userExercises.map((exerciseOption, index) => (
@@ -204,16 +216,17 @@ const AddWorkoutForm = ({ makeRequest, token, setWorkoutData, update, id, workou
                             </option>
                         ))}
                     </select>
-                    <button onClick={() => removeExercise(index1)}>Remove Exercise</button>
+                    <button onClick={() => removeExercise(index1)} className="addWorkoutModifyFormButton" style={{width:"10%"}}>Remove Exercise</button>
                     {exercise.setInfo.map((set, index2) => (
                         <div>
-                            &emsp;
                             <input
                                 type="text"
                                 name="weight"
                                 placeholder="Weight"
                                 value={set.weight}
                                 onChange={e => handleSetInfoChange(index1, index2, e)}
+                                className="addWorkoutInput"
+                                style={{width:"5%",marginLeft:"7%"}}
                             />
                             <input
                                 type="text"
@@ -221,18 +234,19 @@ const AddWorkoutForm = ({ makeRequest, token, setWorkoutData, update, id, workou
                                 placeholder="Reps"
                                 value={set.reps}
                                 onChange={e => handleSetInfoChange(index1, index2, e)}
+                                className="addWorkoutInput"
+                                style={{width:"5%",marginLeft:"1%"}}
                             />
-                            <button onClick={() => removeSet(index1, index2)}>Remove</button>
+                            <button onClick={() => removeSet(index1, index2)} className="addWorkoutModifyFormButton">Remove</button>
                         </div>
                     ))}
-                    <button onClick={() => addSet(index1)}>Add Set</button>
+                    <button onClick={() => addSet(index1)} className="addSetButton">Add Set</button>
                 </div>
             ))}
             <br/>
-            <button onClick={addExercise}>Add Exercise</button>
-            {!update && <button onClick={handleSubmit}>Submit</button>}
-            {update && <button onClick={handleSubmit}>Update</button>}
-            <button onClick={switchToWorkoutsPage}>Cancel</button>
+            <button onClick={addExercise} className="addWorkoutButton" style={{width:"10%",marginLeft:"5%",marginTop:"1vh"}}>Add Exercise</button>
+            {!update && <button onClick={handleSubmit} className="addWorkoutButton" style={{width:"10%",marginLeft:"1%",marginBottom:"2vh"}}>Submit</button>}
+            {update && <button onClick={handleSubmit} className="addWorkoutButton" style={{width:"10%",marginLeft:"1%"}}>Update</button>}
         </div>
     );
 }
