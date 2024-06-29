@@ -8,14 +8,18 @@ const WorkoutInfo = ({ workout, setDisplayWorkout, switchToWorkoutsPage, switchT
 
     const date = new Date(workout.date);
     return (
-        <div>
-            <h2>{workout.name}</h2>
-            <h2>{`${date.getDate()}/${date.getMonth() < 10 ? '0' : ''}${date.getMonth() + 1}/${date.getFullYear()}`}</h2>
+        <div className="addWorkoutPage">
+            <div className='header'>
+              <h2 className='headerText'>Fitness Tracker</h2>
+              <button onClick={goBack} className="headerButton" style={{marginLeft:"30%"}}>Back</button>
+            </div>
+            <h1 id='workoutNameHeader'>{workout.name}</h1>
+            <h2 id='workoutDateHeader'>{`Date: ${date.getDate()}/${date.getMonth() < 10 ? '0' : ''}${date.getMonth() + 1}/${date.getFullYear()}`}</h2>
+            <br/>
             {workout.exercises.map(exercise => (
                 <ExerciseWidget exercise={exercise} workout={workout}/>
             ))}
-            <button onClick={goBack}>Back</button>
-            <button onClick={switchToUpdateWorkoutPage}>Update</button>
+            <button onClick={switchToUpdateWorkoutPage} id="updateButton">Update</button>
         </div>
     );
 }

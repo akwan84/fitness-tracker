@@ -4,9 +4,9 @@ const ExerciseWidget = ({ exercise, workout }) => {
         for(let i = 0; i < exercise.setInfo.length; i++) {
             sets.push(
                 <div>
-                    <h3>{`Set ${i+1}`}</h3>
-                    <p>&emsp;{`Weight: ${exercise.setInfo[i].weight}`}</p>
-                    <p>&emsp;{`Reps: ${exercise.setInfo[i].reps}`}</p>
+                    <h3 className="exerciseWidgetSetHeader">{`Set ${i+1}`}</h3>
+                    <p className="exerciseWidgetSetContent">{`Weight: ${exercise.setInfo[i].weight}`}</p>
+                    <p className="exerciseWidgetSetContent">{`Reps: ${exercise.setInfo[i].reps}`}</p>
                 </div>
             );
         }
@@ -14,9 +14,11 @@ const ExerciseWidget = ({ exercise, workout }) => {
     }
 
     return (
-        <div>
-            <h2>{exercise.exercise}</h2>
+        <div className="exerciseWidget">
+            <br/>
+            <h2 className="exerciseWidgetExerciseHeader">{exercise.exercise}</h2>
             {mapSets()}
+            <br/>
         </div>
     );
 }
