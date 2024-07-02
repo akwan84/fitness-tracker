@@ -347,7 +347,7 @@ function App() {
             />
             <br/>
             <button className="pageToggleButton" onClick={getPrevPage} style={{marginLeft:"35%"}}>Previous</button>
-            <div id="pageToggleNum"><p>{curPage}</p></div>
+            <div className="pageToggleNum"><p>{curPage}</p></div>
             <button className="pageToggleButton" onClick={getNextPage}>Next</button>
           </div>
         ) : showWorkoutInfo ? (

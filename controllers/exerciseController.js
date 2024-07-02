@@ -246,7 +246,12 @@ const getHistory = async(req, res) => {
         const skip = (page - 1) * pageSize;
 
         //get all the workouts of the user and sort in ascending order by date
-        const result = await Workout.find({ "user" : user }).sort({ date : -1 }).skip(skip).limit(pageSize).exec();
+        const result = await Workout.find(
+            { 
+                "user" : user, 
+                "exercises": { $elemMatch: { exercise : exercise}} 
+            })
+            .sort({ date : -1 }).skip(skip).limit(pageSize).exec();
 
         const response = [];
 

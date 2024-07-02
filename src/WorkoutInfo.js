@@ -8,7 +8,7 @@ const WorkoutInfo = ({ workout, setDisplayWorkout, switchToWorkoutsPage, switchT
 
     const date = new Date(workout.date);
     return (
-        <div className="addWorkoutPage">
+        <div className="appPage" style={{overflowY:"auto"}}>
             <div className='header'>
               <h2 className='headerText'>Fitness Tracker</h2>
               <button onClick={goBack} className="headerButton" style={{marginLeft:"30%"}}>Back</button>

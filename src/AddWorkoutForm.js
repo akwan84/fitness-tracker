@@ -164,7 +164,7 @@ const AddWorkoutForm = ({ makeRequest, token, setWorkoutData, update, id, workou
     }
 
     return (
-        <div className="addWorkoutPage">
+        <div className="appPage" style={{overflowY:"auto"}}>
             <div className='header'>
               <h2 className='headerText'>Fitness Tracker</h2>
               <button onClick={switchToWorkoutsPage} className="headerButton" style={{marginLeft:"30%"}}>Cancel</button>

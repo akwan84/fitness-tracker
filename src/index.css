@@ -139,21 +139,11 @@ h2, h3 {
   cursor: pointer;
 }
 
-#pageToggleNum {
+.pageToggleNum {
   font-size: 2vh;
   width: 10%;
   text-align: center;
   display: inline-block;
-}
-
-.addWorkoutPage {
-  width: 80%;
-  height: 100vh;
-  margin: 0 auto;
-  box-shadow: 0px 0px 15px gray;
-  min-width: 900px;
-  margin-top: 0%;
-  overflow-y: auto;
 }
 
 .addWorkoutHeader {
@@ -277,4 +267,45 @@ h2, h3 {
   color: #002907;
   border: 1px solid;
   cursor: pointer;
+}
+
+#exerciseHistorySelect {
+  width: 20%;
+  height: 3vh;
+  font-size: 2vh;
+  margin-left: 5%;
+  margin-top: 2vh;
+}
+
+#exerciseHistorySubmit {
+  width: 8%;
+  height: 3vh;
+  margin-left: 1%;
+  font-size: 2vh;
+  background-color: #002907;
+  color: white;
+  border: 1px solid;
+}
+
+#exerciseHistorySubmit:hover {
+  background-color: white;
+  color: #002907;
+  cursor: pointer;
+}
+
+#noWorkoutHistoryText {
+  font-size: 3vh;
+  padding-top: 1vh;
+  text-align: center;
+}
+
+.exerciseHistoryWidgetHeader {
+  font-size: 2vh;
+  padding-top: 2vh;
+  margin-left: 2%;
+}
+
+.exerciseHistoryWidgetText {
+  font-size: 1.5vh;
+  margin-left: 2%;
 }
