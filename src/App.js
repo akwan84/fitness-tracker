@@ -3,6 +3,8 @@ import WorkoutDisplay from './WorkoutDisplay';
 import WorkoutInfo from './WorkoutInfo';
 import AddWorkoutForm from './AddWorkoutForm';
 import ExerciseHistory from './ExerciseHistory';
+import Login from './Login';
+import Register from './Register';
 
 function App() {
   const PAGE_SIZE = 5;
@@ -396,52 +398,24 @@ function App() {
       ) : (
         <div className="loginPage">
           <br />
-          <h2 className="loginHeader">Login</h2>
-          <input
-            className="loginInput"
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+          <Login
+            username={username}
+            setUsername={setUsername}
+            password={password}
+            setPassword={setPassword}
+            handleLogin={handleLogin}
           />
           <br />
-          <input
-            className="loginInput"
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+          <br />
+          <Register
+            regUsername={regUsername}
+            setRegUsername={setRegUsername}
+            regPassword={regPassword}
+            setRegPassword={setRegPassword}
+            confirmPassword={confirmPassword}
+            setConfirmPassword={setConfirmPassword}
+            handleRegister={handleRegister}
           />
-          <br />
-          <button className="loginButton" onClick={handleLogin}>Login</button>
-          <br />
-          <br />
-          <h2 className="loginHeader">Sign Up</h2>
-          <input
-            className="loginInput"
-            type="text"
-            placeholder="Username"
-            value={regUsername}
-            onChange={(e) => setRegUsername(e.target.value)}
-          />
-          <br />
-          <input
-            className="loginInput"
-            type="password"
-            placeholder="Password"
-            value={regPassword}
-            onChange={(e) => setRegPassword(e.target.value)}
-          />
-          <br />
-          <input
-            className="loginInput"
-            type="password"
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-          <br />
-          <button className="loginButton" onClick={handleRegister}>Sign Up</button>
         </div>
       )}
     </div>
