@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import PageContext from "./context/PageContext";
 //test
-const ExerciseHistory = ({ switchToWorkoutsPage, userExercises, token, makeRequest }) => {
+const ExerciseHistory = ({ userExercises, token, makeRequest }) => {
     const PAGE_SIZE = 5;
     const [selectedExercise, setSelectedExercise] = useState('');
     const [exerciseData, setExerciseData] = useState([]);
     const [pageNum, setPageNum] = useState(1);
+
+    const { switchToWorkoutsPage } = useContext(PageContext);
 
     const getHistory = async() => {
         try {

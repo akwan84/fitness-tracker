@@ -1,6 +1,10 @@
 import ExerciseWidget from "./ExerciseWidget";
+import { useContext } from 'react';
+import PageContext from './context/PageContext';
 
-const WorkoutInfo = ({ workout, setDisplayWorkout, switchToWorkoutsPage, switchToUpdateWorkoutPage }) => {
+const WorkoutInfo = ({ workout, setDisplayWorkout }) => {
+    const { switchToWorkoutsPage, switchToUpdateWorkoutPage } = useContext(PageContext);
+
     const goBack = () => {
         setDisplayWorkout(null);
         switchToWorkoutsPage();

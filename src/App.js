@@ -5,8 +5,14 @@ import AddWorkoutForm from './AddWorkoutForm';
 import ExerciseHistory from './ExerciseHistory';
 import Login from './Login';
 import Register from './Register';
+import Header from './Header';
+
+import { useContext } from 'react';
+import PageContext from './context/PageContext';
 
 function App() {
+  const { showWorkouts, showWorkoutInfo, showAddWorkoutForm, showUpdateWorkoutForm, showExerciseHistoryPage } = useContext(PageContext)
+
   const PAGE_SIZE = 5;
 
   // state to store username and password
@@ -28,13 +34,6 @@ function App() {
   const [userExercises, setUserExercises] = useState([]);
   const [displayWorkout, setDisplayWorkout] = useState({});
   const [curPage, setCurPage] = useState(1);
-
-  // states to manage what page to show
-  const [showWorkouts, setShowWorkouts] = useState(true);
-  const [showWorkoutInfo, setShowWorkoutInfo] = useState(false);
-  const [showAddWorkoutForm, setShowAddWorkoutForm] = useState(false);
-  const [showUpdateWorkoutForm, setShowUpdateWorkoutForm] = useState(false);
-  const [showExerciseHistoryPage, setShowExerciseHistoryPage] = useState(false);
 
   const handleWorkoutsRefresh = async(token) => {
     const res = await makeRequest(`workout?pageSize=${PAGE_SIZE}&page=1`, 'GET', token, null);
@@ -192,14 +191,6 @@ function App() {
     }
   }
 
-  const switchToAddWorkout = () => {
-    setShowWorkoutInfo(false);
-    setShowWorkouts(false);
-    setShowUpdateWorkoutForm(false);
-    setShowAddWorkoutForm(true);
-    setShowExerciseHistoryPage(false);
-  }
-
   //if the refresh token is still valid, keep the user logged in and provide a new access token
   useEffect(() => {
     const fetchData = async () => {
@@ -295,49 +286,12 @@ function App() {
     }
   }
 
-  const switchToWorkoutsPage = () => {
-    setShowWorkouts(true);
-    setShowWorkoutInfo(false);
-    setShowAddWorkoutForm(false);
-    setShowUpdateWorkoutForm(false);
-    setShowExerciseHistoryPage(false);
-  }
-
-  const switchToUpdateWorkoutPage = () => {
-    setShowWorkouts(false);
-    setShowWorkoutInfo(false);
-    setShowAddWorkoutForm(false);
-    setShowUpdateWorkoutForm(true);
-    setShowExerciseHistoryPage(false);
-  }
-
-  const switchToWorkoutInfo = () => {
-    setShowWorkouts(false);
-    setShowWorkoutInfo(true);
-    setShowAddWorkoutForm(false);
-    setShowUpdateWorkoutForm(false);
-    setShowExerciseHistoryPage(false);
-  }
-
-  const switchToExerciseHistoryPage = () => {
-    setShowWorkouts(false);
-    setShowWorkoutInfo(false);
-    setShowAddWorkoutForm(false);
-    setShowUpdateWorkoutForm(false);
-    setShowExerciseHistoryPage(true);
-  }
-
   return (
     <div>
       {isLoggedIn ? (
         showWorkouts ? (
           <div className="appPage">
-            <div className='header'>
-              <h2 className='headerText'>Fitness Tracker</h2>
-              <button onClick={switchToAddWorkout} className="headerButton">Add Workout</button>
-              <button onClick={switchToExerciseHistoryPage} className="headerButton" style={{marginLeft:"0px"}}>Exercise History</button>
-              <button onClick={handleLogout} className="headerButton">Logout</button>
-            </div>
+            <Header handleLogout={handleLogout}/>
             <WorkoutDisplay 
               makeRequest={makeRequest}
               token={token}
@@ -345,7 +299,6 @@ function App() {
               setDisplayWorkout={setDisplayWorkout} 
               setWorkoutData={setWorkoutData}
               handleWorkoutsRefresh={handleWorkoutsRefresh}
-              switchToWorkoutInfo={switchToWorkoutInfo}
             />
             <br/>
             <button className="pageToggleButton" onClick={getPrevPage} style={{marginLeft:"35%"}}>Previous</button>
@@ -356,8 +309,6 @@ function App() {
           <WorkoutInfo 
             workout={displayWorkout}  
             setDisplayWorkout={setDisplayWorkout} 
-            switchToWorkoutsPage={switchToWorkoutsPage}
-            switchToUpdateWorkoutPage={switchToUpdateWorkoutPage}
           />
         ) : showAddWorkoutForm ? (
           <AddWorkoutForm
@@ -370,7 +321,6 @@ function App() {
             userExercises={userExercises}
             setUserExercises={setUserExercises}
             handleWorkoutsRefresh={handleWorkoutsRefresh}
-            switchToWorkoutsPage={switchToWorkoutsPage}
           />
         ) : showUpdateWorkoutForm ? (
           <AddWorkoutForm
@@ -383,11 +333,9 @@ function App() {
             userExercises={userExercises}
             setUserExercises={setUserExercises}
             handleWorkoutsRefresh={handleWorkoutsRefresh}
-            switchToWorkoutsPage={switchToWorkoutsPage}
           />
         ) : showExerciseHistoryPage ? (
           <ExerciseHistory
-            switchToWorkoutsPage={switchToWorkoutsPage}
             userExercises={userExercises}
             token={token}
             makeRequest={makeRequest}

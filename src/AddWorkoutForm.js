@@ -1,10 +1,14 @@
 import { useState } from "react";
+import { useContext } from 'react';
+import PageContext from './context/PageContext';
 
-const AddWorkoutForm = ({ makeRequest, token, setWorkoutData, update, id, workoutData, userExercises, setUserExercises, handleWorkoutsRefresh, switchToWorkoutsPage }) => {
+const AddWorkoutForm = ({ makeRequest, token, setWorkoutData, update, id, workoutData, userExercises, setUserExercises, handleWorkoutsRefresh }) => {
     const [name, setName] = useState(workoutData ? workoutData.name : '');
     const [date, setDate] = useState(workoutData ? `${workoutData.date.substring(0, 4)}-${workoutData.date.substring(5, 7)}-${workoutData.date.substring(8,10)}` : '');
     const [exercises, setExercises] = useState(workoutData ? workoutData.exercises : []);
     const [newExercise, setNewExercise] = useState('');
+
+    const { switchToWorkoutsPage } = useContext(PageContext);
     
     //Add an exercise to the form
     const addExercise = () => {
