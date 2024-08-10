@@ -2,7 +2,7 @@ import { createContext, useState } from 'react';
 
 const PageContext = createContext({});
 
-export const DataProvider = ({ children }) => {
+export const PageDataProvider = ({ children }) => {
     const [showWorkouts, setShowWorkouts] = useState(true);
     const [showWorkoutInfo, setShowWorkoutInfo] = useState(false);
     const [showAddWorkoutForm, setShowAddWorkoutForm] = useState(false);

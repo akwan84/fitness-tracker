@@ -2,13 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import { DataProvider } from './context/PageContext';
+import { PageDataProvider } from './context/PageContext';
+import { DataProvider } from './context/DataContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <DataProvider>
-      <App />
-    </DataProvider>
+    <PageDataProvider>
+      <DataProvider>
+        <App />
+      </DataProvider>
+    </PageDataProvider>
   </React.StrictMode>
 );

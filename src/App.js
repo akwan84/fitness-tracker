@@ -9,9 +9,11 @@ import Header from './Header';
 
 import { useContext } from 'react';
 import PageContext from './context/PageContext';
+import DataContext from './context/DataContext';
 
 function App() {
   const { showWorkouts, showWorkoutInfo, showAddWorkoutForm, showUpdateWorkoutForm, showExerciseHistoryPage } = useContext(PageContext)
+  const { displayWorkout, setWorkoutData, setUserExercises } = useContext(DataContext);
 
   const PAGE_SIZE = 5;
 
@@ -26,13 +28,9 @@ function App() {
 
   // access token
   const [token, setToken] = useState('');
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // data states
-  const [workoutData, setWorkoutData] = useState(null);
-  const [userExercises, setUserExercises] = useState([]);
-  const [displayWorkout, setDisplayWorkout] = useState({});
   const [curPage, setCurPage] = useState(1);
 
   const handleWorkoutsRefresh = async(token) => {
@@ -295,9 +293,6 @@ function App() {
             <WorkoutDisplay 
               makeRequest={makeRequest}
               token={token}
-              workoutData={workoutData} 
-              setDisplayWorkout={setDisplayWorkout} 
-              setWorkoutData={setWorkoutData}
               handleWorkoutsRefresh={handleWorkoutsRefresh}
             />
             <br/>
@@ -306,37 +301,27 @@ function App() {
             <button className="pageToggleButton" onClick={getNextPage}>Next</button>
           </div>
         ) : showWorkoutInfo ? (
-          <WorkoutInfo 
-            workout={displayWorkout}  
-            setDisplayWorkout={setDisplayWorkout} 
-          />
+          <WorkoutInfo />
         ) : showAddWorkoutForm ? (
           <AddWorkoutForm
             makeRequest={makeRequest}
             token={token}
-            setWorkoutData={setWorkoutData}
             update={false}
             id={null}
-            workoutData={null}
-            userExercises={userExercises}
-            setUserExercises={setUserExercises}
+            workoutData={null} 
             handleWorkoutsRefresh={handleWorkoutsRefresh}
           />
         ) : showUpdateWorkoutForm ? (
           <AddWorkoutForm
             makeRequest={makeRequest}
             token={token}
-            setWorkoutData={setWorkoutData}
             update={true}
             id={displayWorkout["_id"]}
             workoutData={displayWorkout}
-            userExercises={userExercises}
-            setUserExercises={setUserExercises}
             handleWorkoutsRefresh={handleWorkoutsRefresh}
           />
         ) : showExerciseHistoryPage ? (
           <ExerciseHistory
-            userExercises={userExercises}
             token={token}
             makeRequest={makeRequest}
           />
