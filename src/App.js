@@ -10,10 +10,12 @@ import Header from './Header';
 import { useContext } from 'react';
 import PageContext from './context/PageContext';
 import DataContext from './context/DataContext';
+import RequestContext from './context/RequestContext';
 
 function App() {
   const { showWorkouts, showWorkoutInfo, showAddWorkoutForm, showUpdateWorkoutForm, showExerciseHistoryPage } = useContext(PageContext)
   const { displayWorkout, setWorkoutData, setUserExercises } = useContext(DataContext);
+  const { handleWorkoutsRefresh, handleExerciseRefresh, makeRequest, handleRefresh, token, setToken, isLoggedIn, setIsLoggedIn} = useContext(RequestContext);
 
   const PAGE_SIZE = 5;
 
@@ -26,61 +28,8 @@ function App() {
   const [regPassword, setRegPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  // access token
-  const [token, setToken] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   // data states
   const [curPage, setCurPage] = useState(1);
-
-  const handleWorkoutsRefresh = async(token) => {
-    const res = await makeRequest(`workout?pageSize=${PAGE_SIZE}&page=1`, 'GET', token, null);
-    if(res.status !== 200) {
-      throw new Error(res.message);
-    }
-    return res.data;
-  }
-
-  const handleExerciseRefresh = async(token) => {
-    const res = await makeRequest('exercise', 'GET', token, null);
-    if(res.status !== 200) {
-      throw new Error(res.message);
-    }
-    return res.data;
-  }
-
-  //Method to refresh the access token
-  const handleRefresh = async () => {
-    //call the refresh token endpoint
-    const response = await fetch('http://localhost:3500/refresh', {
-      method: 'GET',
-      credentials: 'include', 
-    });
-
-    //throw errors in the response is a 401 or 403
-    if(response.status === 401) {
-      setIsLoggedIn(false);
-      throw new Error('Unauthorized');
-    }
-
-    if(response.status === 403) {
-      setIsLoggedIn(false);
-      throw new Error('Forbidden');
-    }
-    
-    //print out and store the access token
-    const data = await response.json();
-    setToken(data["accessToken"]);
-    setIsLoggedIn(true);
-
-    //refresh the display workouts with the new page 1
-    const workouts = await handleWorkoutsRefresh(data["accessToken"]);
-    setWorkoutData(workouts);
-
-    //refetch the user exercises
-    const exercises = await handleExerciseRefresh(data["accessToken"]);
-    setUserExercises(exercises.exercises);
-  };
 
   //log in a user
   const handleLogin = async () => {
@@ -141,53 +90,6 @@ function App() {
       alert(err.message);
     }
   };
-
-  //Method to make a request to the API
-  const makeRequest = async (route, method, token, reqBody) => {
-    let response;
-    try {
-      //set request options
-      const options = {
-        method: method,
-        headers: { 
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      };
-
-      //set a request body if one is provided
-      if(reqBody) {
-        options.body = JSON.stringify(reqBody);
-      }
-
-      //attempt to call the endpoint
-      response = await fetch(`http://localhost:3500/${route}`, options);
-
-      if(response.status === 403) {
-        //try refreshing the token if the call returns a 403
-        console.log("Refreshing Token");
-        await handleRefresh();
-        response = await fetch(`http://localhost:3500/${route}`, options);
-      }
-
-      //throw an error if an error status code is returned
-      if (response.status >= 400) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      return {
-        "status" : response.status,
-        "data" : data
-      };
-    } catch(err) {
-      console.log(err.message);
-      return {
-        "status" : response.status,
-        "message" : err.message
-      };
-    }
-  }
 
   //if the refresh token is still valid, keep the user logged in and provide a new access token
   useEffect(() => {
@@ -290,11 +192,7 @@ function App() {
         showWorkouts ? (
           <div className="appPage">
             <Header handleLogout={handleLogout}/>
-            <WorkoutDisplay 
-              makeRequest={makeRequest}
-              token={token}
-              handleWorkoutsRefresh={handleWorkoutsRefresh}
-            />
+            <WorkoutDisplay/>
             <br/>
             <button className="pageToggleButton" onClick={getPrevPage} style={{marginLeft:"35%"}}>Previous</button>
             <div className="pageToggleNum"><p>{curPage}</p></div>
@@ -304,27 +202,18 @@ function App() {
           <WorkoutInfo />
         ) : showAddWorkoutForm ? (
           <AddWorkoutForm
-            makeRequest={makeRequest}
-            token={token}
             update={false}
             id={null}
             workoutData={null} 
-            handleWorkoutsRefresh={handleWorkoutsRefresh}
           />
         ) : showUpdateWorkoutForm ? (
           <AddWorkoutForm
-            makeRequest={makeRequest}
-            token={token}
             update={true}
             id={displayWorkout["_id"]}
             workoutData={displayWorkout}
-            handleWorkoutsRefresh={handleWorkoutsRefresh}
           />
         ) : showExerciseHistoryPage ? (
-          <ExerciseHistory
-            token={token}
-            makeRequest={makeRequest}
-          />
+          <ExerciseHistory/>
         ) : (
           <h2>Error</h2>
         )

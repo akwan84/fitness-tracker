@@ -2,10 +2,13 @@ import WorkoutWidget from "./WorkoutWidget";
 import { useContext } from 'react';
 import PageContext from './context/PageContext';
 import DataContext from "./context/DataContext";
+import RequestContext from "./context/RequestContext";
 
-const WorkoutDisplay = ({ makeRequest, token, handleWorkoutsRefresh }) => {
+const WorkoutDisplay = () => {
     const { switchToWorkoutInfo } = useContext(PageContext);
     const { workoutData, setDisplayWorkout, setWorkoutData } = useContext(DataContext);
+    const { makeRequest, token, handleWorkoutsRefresh } = useContext(RequestContext);
+
     return (
         <div style={{height:"78vh"}}>
             {!workoutData && <h2>No Workouts To Show</h2>}

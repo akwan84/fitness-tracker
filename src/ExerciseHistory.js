@@ -1,8 +1,9 @@
 import { useContext, useState } from "react";
 import PageContext from "./context/PageContext";
 import DataContext from "./context/DataContext";
+import RequestContext from "./context/RequestContext";
 //test
-const ExerciseHistory = ({ token, makeRequest }) => {
+const ExerciseHistory = () => {
     const PAGE_SIZE = 5;
     const [selectedExercise, setSelectedExercise] = useState('');
     const [exerciseData, setExerciseData] = useState([]);
@@ -10,6 +11,7 @@ const ExerciseHistory = ({ token, makeRequest }) => {
 
     const { switchToWorkoutsPage } = useContext(PageContext);
     const { userExercises } = useContext(DataContext);
+    const { token, makeRequest } = useContext(RequestContext);
 
     const getHistory = async() => {
         try {
