@@ -12,7 +12,9 @@ const WorkoutInfo = () => {
         switchToWorkoutsPage();
     }
 
-    const date = new Date(displayWorkout.date);
+    const workoutYear = displayWorkout.date.substring(0, 4);
+    const workoutMonth = displayWorkout.date.substring(5, 7);
+    const workoutDay = displayWorkout.date.substring(8, 10);
     return (
         <div className="appPage" style={{overflowY:"auto"}}>
             <div className='header'>
@@ -20,7 +22,7 @@ const WorkoutInfo = () => {
               <button onClick={goBack} className="headerButton" style={{marginLeft:"30%"}}>Back</button>
             </div>
             <h1 id='workoutNameHeader'>{displayWorkout.name}</h1>
-            <h2 id='workoutDateHeader'>{`Date: ${date.getDate()}/${date.getMonth() < 10 ? '0' : ''}${date.getMonth() + 1}/${date.getFullYear()}`}</h2>
+            <h2 id='workoutDateHeader'>{`Date: ${workoutDay}/${workoutMonth}/${workoutYear}`}</h2>
             <br/>
             {displayWorkout.exercises.map(exercise => (
                 <ExerciseWidget exercise={exercise} workout={displayWorkout}/>

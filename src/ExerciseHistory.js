@@ -76,7 +76,7 @@ const ExerciseHistory = () => {
     }
 
     const parseDate = (date) => {
-        return `${date.getDate()}/${date.getMonth() < 10 ? '0' : ''}${date.getMonth() + 1}/${date.getFullYear()}`
+        return `${date.substring(8, 10)}/${date.substring(5, 7)}/${date.substring(0, 4)}`;
     }
 
     return (
@@ -101,7 +101,7 @@ const ExerciseHistory = () => {
             <button onClick={getHistory} id="exerciseHistorySubmit">Select</button>
             {exerciseData.length > 0 && exerciseData.map(day => (
                 <div className="exerciseWidget">
-                    <h3 className="exerciseHistoryWidgetHeader">{parseDate(new Date(day.date))}</h3>
+                    <h3 className="exerciseHistoryWidgetHeader">{parseDate(day.date)}</h3>
                     {day.setInfo.map((set, index) => (
                         <div>
                             <p className="exerciseHistoryWidgetText">&emsp;{`${index + 1}. Weight: ${set.weight}, Reps: ${set.reps}`}</p>
