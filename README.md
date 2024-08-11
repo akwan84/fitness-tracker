@@ -9,6 +9,9 @@ This simple fitness tracker built using the MERN tech stack, specfically:
 Having gotten into weight training a few years ago, I started to understand the importance of tracking progress. Using the notes app on my phone was inconvenient and disorganized, and most fitness trackers I have tried were either too complicated, too simple, or too expensive. Realizing that all the features of a fitness tracker I would want to use could be built into a full-stack application led me to start this project.
 
 ## Installation and Set Up
+### Node and NPM
+Make sure you have a fairly new version of `node` installed on your computer. I built this project with `18.7.0`, so this and newer versions should be okay. Installation instructions can be found [here](https://nodejs.org/en/download/package-manager).
+
 ### MongoDB Atlas Setup
 1. Head to [mongodb.com](http://mongodb.com) and create an account
 2. Create a new project and set up user access permissions if needed
@@ -40,7 +43,7 @@ First off, ensure you have Node.js installed on your computer. You can check thi
 3. You are going to need 2 of these (run the above command twice), copy them both without the quotes
 
 ### Installing Dependencies
-With Node.js installed on your computer, navigate to the project in your terminal and type `npm install` to install all the needed dependencies for the project.
+With `node` installed on your computer, navigate to the project in your terminal and type `npm install` to install all the needed dependencies for the project.
 
 ### Environment Variable Setup
 Open the project up in your file explorer or IDE and in the root of the project, create a `.env` file and add the following content:
