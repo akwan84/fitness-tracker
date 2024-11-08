@@ -29,7 +29,7 @@ export const RequestProvider = ({ children }) => {
 
     const handleRefresh = async () => {
         //call the refresh token endpoint
-        const response = await fetch('http://localhost:3500/refresh', {
+        const response = await fetch(process.env.REACT_APP_API_URL + '/refresh', {
           method: 'GET',
           credentials: 'include', 
         });
@@ -77,13 +77,13 @@ export const RequestProvider = ({ children }) => {
             }
         
             //attempt to call the endpoint
-            response = await fetch(`http://localhost:3500/${route}`, options);
+            response = await fetch(process.env.REACT_APP_API_URL + `/${route}`, options);
         
             if(response.status === 403) {
                 //try refreshing the token if the call returns a 403
                 console.log("Refreshing Token");
                 await handleRefresh();
-                response = await fetch(`http://localhost:3500/${route}`, options);
+                response = await fetch(process.env.REACT_APP_API_URL + `/${route}`, options);
             }
         
             //throw an error if an error status code is returned
