@@ -168,7 +168,7 @@ const AddWorkoutForm = ({ update, id, workoutData }) => {
             alert(exercisesResponse.message);
             return;
         }
-        setUserExercises(exercisesResponse.exercises);
+        setUserExercises(exercisesResponse.data.exercises);
     }
 
     return (
