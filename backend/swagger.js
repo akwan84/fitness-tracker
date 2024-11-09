@@ -9,7 +9,7 @@ const swaggerDefinition = {
     },
     servers: [
         {
-            url: 'http://localhost:3500',
+            url: process.env.REACT_APP_API_URL,
             description: 'Development server',
         },
     ],

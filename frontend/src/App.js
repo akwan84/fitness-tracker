@@ -37,7 +37,7 @@ function App() {
     const pwd = password;
     try {
       //call the log in endpoint
-      const response = await fetch('http://localhost:3500/login', {
+      const response = await fetch(process.env.REACT_APP_API_URL + '/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include', 
@@ -74,7 +74,7 @@ function App() {
   const handleLogout = async () => {
     try {
       //call the log in endpoint
-      const response = await fetch('http://localhost:3500/logout', {
+      const response = await fetch(process.env.REACT_APP_API_URL + '/logout', {
         method: 'POST',
         credentials: 'include', 
       });
@@ -122,7 +122,7 @@ function App() {
 
     try{
       //call the registration endpoint
-      const response = await fetch('http://localhost:3500/register', {
+      const response = await fetch(process.env.REACT_APP_API_URL + '/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include', 
