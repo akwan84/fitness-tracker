@@ -22,3 +22,6 @@ services:
     image: mongo-express
     ports:
       - "8083:8081"
+    environment: 
+      ME_CONFIG_BASICAUTH_USERNAME: ""
+      ME_CONFIG_BASICAUTH_PASSWORD: ""
