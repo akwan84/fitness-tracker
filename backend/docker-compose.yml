@@ -4,10 +4,14 @@ services:
     build: .
     ports:
       - "3500:3500"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
     env_file:
       - .env
     depends_on:
       - mongo
+    command: npm run dev
   
   mongo:
     container_name: mongo
