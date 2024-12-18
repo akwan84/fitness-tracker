@@ -1,0 +1,83 @@
+/* Styles for the add/update workout page components */
+
+.addWorkoutHeader {
+    font-size: 3vh;
+    margin-left: 5%;
+    padding-top: 1vh;
+  }
+  
+  .addWorkoutInput {
+    width: 15%;
+    height: 2vh;
+    font-size: 1.5vh;
+    margin-left: 5%;
+    margin-top: 0.5vh;
+  }
+  
+  .addWorkoutButton {
+    display: inline-block;
+    width: 5%;
+    height: 2.5vh;
+    font-size: 1.5vh;
+    background-color: #002907;
+    border: 0px solid;
+    color: white;
+    transition: background-color 0.25s, box-shadow 0.25s;
+  }
+  
+  .addWorkoutButton:hover {
+    background-color: #01400c;
+    box-shadow: 0px 0px 5px black;
+    cursor: pointer;
+  }
+  
+  .addWorkoutExerciseHeader {
+    font-size: 2vh;
+    padding-top: 1vh;
+    margin-left: 5%;
+  }
+  
+  .addWorkoutModifyFormButton {
+    margin-left: 1%;
+    width: 5%;
+    height: 2.5vh;
+    font-size: 1.5vh;
+    background-color: #b30f04;
+    color: white;
+    border: 0px solid;
+    transition: background-color 0.25s, box-shadow 0.25s;
+  }
+  
+  .addWorkoutModifyFormButton:hover {
+    background-color: #d91204;
+    box-shadow: 0px 0px 5px black;
+    cursor: pointer;
+  }
+  
+  .addSetButton {
+    margin-left: 7%;
+    margin-top: 0.5vh;
+    width: 10%;
+    height: 2.5vh;
+    font-size: 1.5vh;
+    background-color: #002907;
+    color: white;
+    border: 0px solid;
+    transition: background-color 0.25s, box-shadow 0.25s;
+  }
+  
+  .addSetButton:hover {
+    background-color: #01400c;
+    box-shadow: 0px 0px 5px black;
+    cursor: pointer;
+  }
+  
+  #workoutNameHeader {
+    font-size: 3vh;
+    margin-left: 5%;
+  }
+  
+  #workoutDateHeader {
+    font-size: 2vh;
+    margin-left: 5%;
+  }
